@@ -30,6 +30,7 @@ const Request = () => {
         status: true
     })
     const [companies, setCompanies] = useState([])
+    const [products, setProducts] = useState([])
     const [companiesBank, setCompaniesBank] = useState(0)
 
     const handlerChange = (e) => {
@@ -45,9 +46,47 @@ const Request = () => {
         setCompanies(res.data)
     }
 
+    const getProducts = async () => {
+        const res = await axiosSSR.get("/api/products/")
+        setProducts(res.data)
+    }
+
     useEffect(() => {
         getCompanies()
+        getProducts()
     }, [])
+
+    const handlerClick = async () => {
+        const data = {
+            currency: requestState.currency,
+            price: requestState.price,
+            product_or_service: requestState.productOrService,
+            sell_or_buy: requestState.sellOrBuy,
+            status: requestState.status,
+            to_company: +requestState.ourCompany,
+            bank: +requestState.bankOfOurCompany,
+            from_company: +requestState.counterPartyCompany,
+            counterparty_bank: +requestState.counterPartyBank,
+            product_category: +requestState.productCategory
+        }
+        await axiosSSR.post("/api/request/", data).then(res => {
+            setRequestState({
+                currency: "",
+                price: 0,
+                productOrService: "",
+                sellOrBuy: "",
+                ourCompany: "",
+                bankOfOurCompany: "",
+                counterPartyCompany: "",
+                counterPartyBank: "",
+                productCategory: "",
+                status: true
+            })
+            return res
+        })
+    }
+
+    console.log(requestState)
 
     return (
         <div>
@@ -151,8 +190,18 @@ const Request = () => {
                 <div className="col-8">
                     <select className="form-select" aria-label="Default select example" name="productCategory" onChange={handlerChange}>
                         <option defaultValue>...</option>
+                        {
+                            products?.map((item, idx) => (
+                                <option value={item.id} key={idx}>
+                                    {item.name}
+                                </option>
+                            ))
+                        }
                     </select>
                 </div>
+            </div>
+            <div className='d-flex justify-content-end mb-5 mt-3 align-items-center'>
+                <button className="btn btn-primary" onClick={handlerClick}>Отправить</button>
             </div>
         </div>
 )
