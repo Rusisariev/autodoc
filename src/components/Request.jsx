@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import axios from "axios";
 import axiosSSR from "../axios";
 
-const currency = [
+export const currency = [
     {
         title: "USD"
     }, {
@@ -31,7 +31,6 @@ const Request = () => {
     })
     const [companies, setCompanies] = useState([])
     const [products, setProducts] = useState([])
-    const [companiesBank, setCompaniesBank] = useState(0)
 
     const handlerChange = (e) => {
         const {name, value} = e.target
@@ -56,7 +55,8 @@ const Request = () => {
         getProducts()
     }, [])
 
-    const handlerClick = async () => {
+    const handlerClick = async (e) => {
+        e.preventDefault()
         const data = {
             currency: requestState.currency,
             price: requestState.price,
@@ -86,7 +86,8 @@ const Request = () => {
         })
     }
 
-    const clearState = () => {
+    const clearState = (e) => {
+        e.preventDefault()
         setRequestState({
             currency: "",
             price: 0,
@@ -102,11 +103,11 @@ const Request = () => {
     }
 
     return (
-        <div>
+        <form onSubmit={handlerClick}>
             <div className="row mt-3 align-items-center">
                 <p className="mb-0 col-4">Валюта:</p>
                 <div className="col-8">
-                    <select className="form-select" aria-label="Default select example" name="currency" value={requestState.currency} onChange={handlerChange}>
+                    <select className="form-select" aria-label="Default select example" name="currency" value={requestState.currency} onChange={handlerChange} required>
                         <option defaultValue>...</option>
                         {
                             currency.map((item, idx) => {
@@ -119,23 +120,23 @@ const Request = () => {
             <div className="row mt-3 align-items-center">
                 <p className="mb-0 col-4">Цена:</p>
                 <div className="col-8">
-                    <input type="number" className="form-control" min="0" name="price" value={requestState.price} onChange={handlerChange}/>
+                    <input type="number" className="form-control" min="0" name="price" value={requestState.price} onChange={handlerChange} required/>
                 </div>
             </div>
             <div className="row mt-3 align-items-center">
                 <p className="mb-0 col-4">Товар или услуга:</p>
                 <div className="col-8">
-                    <select className="form-select" aria-label="Default select example" name="productOrService" value={requestState.productOrService} onChange={handlerChange}>
+                    <select className="form-select" aria-label="Default select example" name="productOrService" value={requestState.productOrService} onChange={handlerChange} required>
                         <option defaultValue>...</option>
                         <option value="Product">Product</option>
-                        <option value="service">Service</option>
+                        <option value="Service">Service</option>
                     </select>
                 </div>
             </div>
             <div className="row mt-3 align-items-center">
                 <p className="mb-0 col-4">Продать или купить:</p>
                 <div className="col-8">
-                    <select className="form-select" aria-label="Default select example" name="sellOrBuy" value={requestState.sellOrBuy} onChange={handlerChange}>
+                    <select className="form-select" aria-label="Default select example" name="sellOrBuy" value={requestState.sellOrBuy} onChange={handlerChange} required>
                         <option defaultValue>...</option>
                         <option value="Sell">Sell</option>
                         <option value="Buy">Buy</option>
@@ -145,7 +146,7 @@ const Request = () => {
             <div className="row mt-3 align-items-center">
                 <p className="mb-0 col-4">Наша компания:</p>
                 <div className="col-8">
-                    <select className="form-select" aria-label="Default select example" name="ourCompany" value={requestState.ourCompany} onChange={handlerChange}>
+                    <select className="form-select" aria-label="Default select example" name="ourCompany" value={requestState.ourCompany} onChange={handlerChange} required>
                         <option defaultValue>...</option>
                         {
                             companies?.map((item, idx) => (
@@ -160,7 +161,7 @@ const Request = () => {
             <div className="row mt-3 align-items-center">
                 <p className="mb-0 col-4">Банк нашей компании:</p>
                 <div className="col-8">
-                    <select className="form-select" aria-label="Default select example" name="bankOfOurCompany" value={requestState.bankOfOurCompany} onChange={handlerChange}>
+                    <select className="form-select" aria-label="Default select example" name="bankOfOurCompany" value={requestState.bankOfOurCompany} onChange={handlerChange} required>
                         <option defaultValue>...</option>
                         {
                             companies?.filter(el => el.id === Number(requestState.ourCompany))[0]?.banks?.map((item, idx) => (
@@ -188,7 +189,7 @@ const Request = () => {
             <div className="row mt-3 align-items-center">
                 <p className="mb-0 col-4">Банк контрагента:</p>
                 <div className="col-8">
-                    <select className="form-select" aria-label="Default select example" name="counterPartyBank" value={requestState.counterPartyBank} onChange={handlerChange}>
+                    <select className="form-select" aria-label="Default select example" name="counterPartyBank" value={requestState.counterPartyBank} onChange={handlerChange} required>
                         <option defaultValue>...</option>
                         {
                             companies?.filter(el => el.id === Number(requestState.counterPartyCompany))[0]?.banks?.map((item, idx) => (
@@ -201,7 +202,7 @@ const Request = () => {
             <div className="row mt-3 align-items-center">
                 <p className="mb-0 col-4">Категория продукта:</p>
                 <div className="col-8">
-                    <select className="form-select" aria-label="Default select example" name="productCategory" value={requestState.productCategory} onChange={handlerChange}>
+                    <select className="form-select" aria-label="Default select example" name="productCategory" value={requestState.productCategory} onChange={handlerChange} required>
                         <option defaultValue>...</option>
                         {
                             products?.map((item, idx) => (
@@ -215,9 +216,9 @@ const Request = () => {
             </div>
             <div className='d-flex justify-content-end mb-5 mt-3 align-items-center'>
                 <button className="btn btn-danger me-3" onClick={clearState}>Сбросить</button>
-                <button className="btn btn-primary" onClick={handlerClick}>Отправить</button>
+                <button className="btn btn-primary" type="submit">Отправить</button>
             </div>
-        </div>
+        </form>
 )
     ;
 };

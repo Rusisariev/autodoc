@@ -1,0 +1,10 @@
+.alert-custom{
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  opacity: 1;
+  transition: opacity .5s ease;
+}
+.hidden{
+  opacity: 0;
+}
