@@ -6,11 +6,19 @@ import Profile from "./components/Profile";
 import Convertation from "./components/Convertation";
 import Navbar from "./components/Navbar";
 import Request from "./components/Request";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const App = (props) => {
+    const [path, setPath] = useState("")
+    useEffect(() => {
+        setPath(window.location.pathname)
+    }, [document])
     return (
         <>
-            <Navbar/>
+            {
+                path === "/" ? null : <Navbar/>
+            }
             <div className="container">
                 <Routes>
                     <Route path="/" element={<Login/>}/>

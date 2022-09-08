@@ -111,7 +111,7 @@ const Request = () => {
                     <select className="form-select" aria-label="Default select example" name="bankOfOurCompany" onChange={handlerChange}>
                         <option defaultValue>...</option>
                         {
-                            companies.filter(el => el.id === Number(requestState.ourCompany))[0]?.banks?.map((item, idx) => (
+                            companies?.filter(el => el.id === Number(requestState.ourCompany))[0]?.banks?.map((item, idx) => (
                                 <option key={idx} value={item.id}>{item.company_bank_name_en}</option>
                             ))
                         }
@@ -123,6 +123,13 @@ const Request = () => {
                 <div className="col-8">
                     <select className="form-select" aria-label="Default select example" name="counterPartyCompany" onChange={handlerChange}>
                         <option defaultValue>...</option>
+                        {
+                            companies?.map((item, idx) => (
+                                <option value={item.id} key={idx}>
+                                    {item.company_short_name_en}
+                                </option>
+                            ))
+                        }
                     </select>
                 </div>
             </div>
@@ -131,6 +138,11 @@ const Request = () => {
                 <div className="col-8">
                     <select className="form-select" aria-label="Default select example" name="counterPartyBank" onChange={handlerChange}>
                         <option defaultValue>...</option>
+                        {
+                            companies?.filter(el => el.id === Number(requestState.ourCompany))[0]?.banks?.map((item, idx) => (
+                                <option key={idx} value={item.id}>{item.company_bank_name_en}</option>
+                            ))
+                        }
                     </select>
                 </div>
             </div>
