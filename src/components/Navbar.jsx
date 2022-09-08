@@ -15,7 +15,7 @@ const Navbar = () => {
     return (
         <div className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container">
-                <Link className="navbar-brand" to="/">AutoDoc</Link>
+                <div className="navbar-brand" to="/">AutoDoc</div>
                 <button className="navbar-toggler" type="button" onClick={showMobileNav}>
                     <span className="navbar-toggler-icon"/>
                 </button>
@@ -23,7 +23,7 @@ const Navbar = () => {
                     <div className="navbar-nav me-auto mb-2 mb-lg-0">
                         <Link onClick={showMobileNav} to="/profile" className={path === "/profile" ? "nav-link active" : "nav-link"} >Профиль</Link>
                         <Link onClick={showMobileNav} to="/convertation" className={path === "/convertation" ? "nav-link active" : "nav-link"} >Конвертация</Link>
-                        <Link onClick={showMobileNav} to="/request" className={path === "/request" ? "nav-link active" : "nav-link"}>Заяавка</Link>
+                        <Link onClick={showMobileNav} to="/request" className={path === "/request" ? "nav-link active" : "nav-link"}>Заявка</Link>
                     </div>
                 </div>
             </div>

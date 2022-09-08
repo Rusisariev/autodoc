@@ -18,11 +18,9 @@ const Login = () => {
         }))
     }
 
-    const goToLoginPage = () => navigate('/profile');
-
     useEffect(() => {
         if(window.localStorage.getItem("token")){
-            goToLoginPage()
+            navigate('/profile')
         }
     }, [])
 
@@ -40,7 +38,7 @@ const Login = () => {
                 username: "",
                 password: ""
             })
-            goToLoginPage()
+            navigate('/profile')
         }).catch(e => console.error(e))
     }
 

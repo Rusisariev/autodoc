@@ -4,21 +4,13 @@ import Login from "./components/Login";
 import NotFound from "./components/NotFound";
 import Profile from "./components/Profile";
 import Convertation from "./components/Convertation";
-import Navbar from "./components/Navbar";
 import Request from "./components/Request";
-import { useState } from "react";
-import { useEffect } from "react";
+import Navbar from "./components/Navbar"
 
-const App = (props) => {
-    const [path, setPath] = useState("")
-    useEffect(() => {
-        setPath(window.location.pathname)
-    }, [document])
+const App = () => {
     return (
         <>
-            {
-                path === "/" ? null : <Navbar/>
-            }
+            <Navbar />
             <div className="container">
                 <Routes>
                     <Route path="/" element={<Login/>}/>
