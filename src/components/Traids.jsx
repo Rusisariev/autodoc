@@ -197,9 +197,14 @@ const Traids = () => {
                         <select className="form-select" aria-label="Default select example" name="counterparty_company_bank_name" value={traidsState.counterparty_company_bank_name} onChange={handlerChange} required>
                             <option defaultValue>...</option>
                             {
-                                companies?.find(el => el.id === Number(traidsState.client))?.banks?.map((item, idx) => (
-                                    <option key={idx} value={item.id}>{item.company_bank_name_en}</option>
-                                ))
+                                // companies?.find(el => el.id === Number(traidsState.client))?.banks?.map((item, idx) => (
+                                //     <option key={idx} value={item.id}>{item.company_bank_name_en}</option>
+                                // ))
+                                companies.map((item, idx) => {
+                                    return item.banks.map((element, idx) => {
+                                        return <option key={idx} value={element.id}>{item.company_short_name_en}, {element.company_bank_name_en}</option>
+                                    })
+                                })
                             }
                         </select>
                     </div>
@@ -222,7 +227,7 @@ const Traids = () => {
                 <div className="d-flex justify-content-between mb-5 mt-3 align-items-center">
                     <div>
                         {
-                            docx ? <a className="link-dark" href={docx.traid} download>Скачать документ</a> : null
+                            docx ? <a href={docx.traid} download>Скачать документ</a> : null
                         }
                     </div>
                     <div>

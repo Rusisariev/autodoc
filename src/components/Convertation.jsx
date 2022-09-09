@@ -172,9 +172,11 @@ const Convertation = () => {
                     <select className="form-select" aria-label="Default select example" name="our_company_bank_name" value={convertationState.our_company_bank_name} onChange={handlerChange} required>
                         <option defaultValue>...</option>
                         {
-                            companies?.filter(el => el.id === Number(convertationState.our_company_name))[0]?.banks?.map((item, idx) => (
-                                <option key={idx} value={item.id}>{item.company_bank_name_en}</option>
-                            ))
+                            companies.map((item, idx) => {
+                                return item.banks.map((element, idx) => {
+                                    return <option key={idx} value={element.id}>{item.company_short_name_en}, {element.company_bank_name_en}</option>
+                                })
+                            })
                         }
                     </select>
                 </div>
@@ -182,7 +184,7 @@ const Convertation = () => {
             <div className="d-flex justify-content-between mb-5 mt-3 align-items-center">
                 <div>
                     {
-                        docx ? <a className="link-dark" href={docx.convertation} download>Скачать документ</a> : null
+                        docx ? <a href={docx.convertation} download>Скачать документ</a> : null
                     }
                 </div>
                 <div>
