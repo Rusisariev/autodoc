@@ -37,6 +37,13 @@ const Convertation = () => {
         getCompanies()
     }, [])
 
+    useEffect(() => {
+        setConvertationState(prevState => ({
+            ...prevState,
+            our_company_bank_name: ""
+        }))
+    }, [convertationState.our_company_name])
+
     const clearConvertationState = () => {
         setConvertationState({
             date: "",
@@ -172,11 +179,14 @@ const Convertation = () => {
                     <select className="form-select" aria-label="Default select example" name="our_company_bank_name" value={convertationState.our_company_bank_name} onChange={handlerChange} required>
                         <option defaultValue>...</option>
                         {
-                            companies.map((item, idx) => {
-                                return item.banks.map((element, idx) => {
-                                    return <option key={idx} value={element.id}>{item.company_short_name_en}, {element.company_bank_name_en}</option>
-                                })
-                            })
+                            // companies.map((item, idx) => {
+                            //     return item.banks.map((element, idx) => {
+                            //         return <option key={idx} value={element.id}>{item.company_short_name_en}, {element.company_bank_name_en}</option>
+                            //     })
+                            // })
+                            companies?.find(el => el.id === Number(convertationState.our_company_name))?.banks?.map((item, idx) => (
+                                <option key={idx} value={item.id}>{item.company_bank_name_en}</option>
+                            ))
                         }
                     </select>
                 </div>

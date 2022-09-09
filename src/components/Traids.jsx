@@ -33,6 +33,13 @@ const Traids = () => {
         getCompanies()
     }, [])
 
+    useEffect(() => {
+        setTraidsState(prevState => ({
+            ...prevState,
+            counterparty_company_bank_name: ""
+        }))
+    }, [traidsState.client])
+
     const handlerChange = (e) => {
         const {name, value} = e.target
         setTraidsState(prevState => ({
@@ -197,14 +204,14 @@ const Traids = () => {
                         <select className="form-select" aria-label="Default select example" name="counterparty_company_bank_name" value={traidsState.counterparty_company_bank_name} onChange={handlerChange} required>
                             <option defaultValue>...</option>
                             {
-                                // companies?.find(el => el.id === Number(traidsState.client))?.banks?.map((item, idx) => (
-                                //     <option key={idx} value={item.id}>{item.company_bank_name_en}</option>
-                                // ))
-                                companies.map((item, idx) => {
-                                    return item.banks.map((element, idx) => {
-                                        return <option key={idx} value={element.id}>{item.company_short_name_en}, {element.company_bank_name_en}</option>
-                                    })
-                                })
+                                companies?.find(el => el.id === Number(traidsState.client))?.banks?.map((item, idx) => (
+                                    <option key={idx} value={item.id}>{item.company_bank_name_en}</option>
+                                ))
+                                // companies.map((item, idx) => {
+                                //     return item.banks.map((element, idx) => {
+                                //         return <option key={idx} value={element.id}>{item.company_short_name_en}, {element.company_bank_name_en}</option>
+                                //     })
+                                // })
                             }
                         </select>
                     </div>
