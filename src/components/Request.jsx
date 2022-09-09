@@ -37,6 +37,7 @@ const Request = () => {
     const [companies, setCompanies] = useState([])
     const [products, setProducts] = useState([])
     const [al, setAl] = useState(false)
+    const [error, setError] = useState(false)
 
     const handlerChange = (e) => {
         const {name, value} = e.target
@@ -88,6 +89,10 @@ const Request = () => {
                 productCategory: "",
                 status: true
             })
+            if(res?.error?.statusCode === 400){
+                setError(true)
+                return res
+            }
             setAl(true)
             return res
         })
@@ -172,7 +177,7 @@ const Request = () => {
                         <select className="form-select" aria-label="Default select example" name="bankOfOurCompany" value={requestState.bankOfOurCompany} onChange={handlerChange} required>
                             <option defaultValue>...</option>
                             {
-                                companies?.filter(el => el.id === Number(requestState.ourCompany))[0]?.banks?.map((item, idx) => (
+                                companies?.find(el => el.id === Number(requestState.ourCompany))?.banks?.map((item, idx) => (
                                     <option key={idx} value={item.id}>{item.company_bank_name_en}</option>
                                 ))
                             }
@@ -180,7 +185,7 @@ const Request = () => {
                     </div>
                 </div>
                 <div className="row mt-3 align-items-center">
-                    <p className="mb-0 col-4">Компания контрагента *:</p>
+                    <p className="mb-0 col-4">Компания контрагента:</p>
                     <div className="col-8">
                         <select className="form-select" aria-label="Default select example" name="counterPartyCompany" value={requestState.counterPartyCompany} onChange={handlerChange} required>
                             <option defaultValue>...</option>
@@ -200,7 +205,7 @@ const Request = () => {
                         <select className="form-select" aria-label="Default select example" name="counterPartyBank" value={requestState.counterPartyBank} onChange={handlerChange} required>
                             <option defaultValue>...</option>
                             {
-                                companies?.filter(el => el.id === Number(requestState.counterPartyCompany))[0]?.banks?.map((item, idx) => (
+                                companies?.find(el => el.id === Number(requestState.counterPartyCompany))?.banks?.map((item, idx) => (
                                     <option key={idx} value={item.id}>{item.company_bank_name_en}</option>
                                 ))
                             }
@@ -234,6 +239,15 @@ const Request = () => {
                         Успешно!!!
                     </div>
                     <button type="button" className="btn-close ms-5" onClick={() => setAl(false)}/>
+                </div>
+            </div>
+            <div className={error ? "alert-custom" : "alert-custom hidden"}>
+                <div className="alert alert-danger d-flex align-items-center">
+                    <i className="bi bi-exclamation-circle flex-shrink-0 me-2"/>
+                    <div>
+                        Заполните все поля!!!
+                    </div>
+                    <button type="button" className="btn-close ms-5" onClick={() => setError(false)}/>
                 </div>
             </div>
         </>

@@ -18,6 +18,7 @@ const Convertation = () => {
     })
     const [docx, setDocx] = useState(false)
     const [al, setAl] = useState(false)
+    const [error, setError] = useState(false)
 
     const handlerChange = (e) => {
         const {name, value} = e.target
@@ -77,6 +78,10 @@ const Convertation = () => {
                 our_company_name: 0,
                 our_company_bank_name: 0
             })
+            if(res?.error?.statusCode === 400){
+                setError(true)
+                return res
+            }
             setAl(true)
             return res
         })
@@ -192,6 +197,15 @@ const Convertation = () => {
                         Успешно!!!
                     </div>
                     <button type="button" className="btn-close ms-5" onClick={() => setAl(false)}/>
+                </div>
+            </div>
+            <div className={error ? "alert-custom" : "alert-custom hidden"}>
+                <div className="alert alert-danger d-flex align-items-center">
+                    <i className="bi bi-exclamation-circle flex-shrink-0 me-2"/>
+                    <div>
+                        Заполните все поля!!!
+                    </div>
+                    <button type="button" className="btn-close ms-5" onClick={() => setError(false)}/>
                 </div>
             </div>
         </div>

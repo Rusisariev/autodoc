@@ -24,18 +24,16 @@ const Profile = () => {
 
     return (
         <div>
-            <h2 className="text-uppercase">Autodoc</h2>
-            <div>Имя: {user?.username}</div>
+            <div className="mt-4">Имя: {user?.username}</div>
             {
-                user?.email ? <div>E-mail: {user.email}</div> : null
+                user?.email ? <div className="mt-3">E-mail: {user.email}</div> : null
             }
             {
-                user?.first_name ? <div>E-mail: {user.first_name}</div> : null
+                user?.first_name ? <div className="mt-3">Имя ползователья: {user.first_name} {user.last_name}</div> : null
             }
-            {
-                user?.last_name ? <div>E-mail: {user.last_name}</div> : null
-            }
-            <div onClick={signInOut} className="sign-in-out-custom btn btn-danger">Выйти</div>
+            <div className="mt-5 d-flex justify-content-end">
+                <div onClick={signInOut} className="sign-in-out-custom btn btn-danger">Выйти</div>
+            </div>
         </div>
     )
 }

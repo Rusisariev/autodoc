@@ -21,10 +21,12 @@ const Navbar = () => {
                 </button>
                 <div className={show ? "collapse navbar-collapse show" : "collapse navbar-collapse"}>
                     <div className="navbar-nav me-auto mb-2 mb-lg-0">
-                        <Link onClick={showMobileNav} to="/profile" className={path === "/profile" ? "nav-link active" : "nav-link"} >Профиль</Link>
                         <Link onClick={showMobileNav} to="/convertation" className={path === "/convertation" ? "nav-link active" : "nav-link"} >Заявка на конвертацию</Link>
                         <Link onClick={showMobileNav} to="/request" className={path === "/request" ? "nav-link active" : "nav-link"}>Форма 2.0</Link>
                         <Link onClick={showMobileNav} to="/traids" className={path === "/traids" ? "nav-link active" : "nav-link"}>триады</Link>
+                    </div>
+                    <div className="navbar-nav mb-2 mb-lg-0">
+                        <Link onClick={showMobileNav} to="/profile" className={path === "/profile" ? "nav-link active" : "nav-link"} >Профиль</Link>
                     </div>
                 </div>
             </div>
