@@ -4,15 +4,20 @@ import axiosSSR from "../axios";
 
 export const currency = [
     {
-        title: "USD"
+        title: "USD",
+        meaning: "USD",
     }, {
-        title: "EURO"
+        title: "EURO",
+        meaning: "EURO",
     }, {
-        title: "RUB"
+        title: "RUB",
+        meaning: "RUB",
     }, {
-        title: "CNY"
+        title: "CNY",
+        meaning: "CNY",
     }, {
-        title: "SOM"
+        title: "SOM",
+        meaning: "KG",
     }
 ]
 
@@ -114,7 +119,7 @@ const Request = () => {
                             <option defaultValue>...</option>
                             {
                                 currency.map((item, idx) => {
-                                    return <option value={item.title} key={idx}>{item.title}</option>
+                                    return <option value={item.meaning} key={idx}>{item.title}</option>
                                 })
                             }
                         </select>

@@ -24,6 +24,7 @@ const Navbar = () => {
                         <Link onClick={showMobileNav} to="/profile" className={path === "/profile" ? "nav-link active" : "nav-link"} >Профиль</Link>
                         <Link onClick={showMobileNav} to="/convertation" className={path === "/convertation" ? "nav-link active" : "nav-link"} >Заявка на конвертацию</Link>
                         <Link onClick={showMobileNav} to="/request" className={path === "/request" ? "nav-link active" : "nav-link"}>Форма 2.0</Link>
+                        <Link onClick={showMobileNav} to="/traids" className={path === "/traids" ? "nav-link active" : "nav-link"}>триады</Link>
                     </div>
                 </div>
             </div>

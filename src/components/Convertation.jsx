@@ -103,7 +103,7 @@ const Convertation = () => {
                         <option defaultValue>...</option>
                         {
                             currency.map((item, idx) => {
-                                return <option value={item.title} key={idx}>{item.title}</option>
+                                return <option value={item.meaning} key={idx}>{item.title}</option>
                             })
                         }
                     </select>
@@ -128,7 +128,7 @@ const Convertation = () => {
                         <option defaultValue>...</option>
                         {
                             currency.map((item, idx) => {
-                                return <option value={item.title} key={idx}>{item.title}</option>
+                                return <option value={item.meaning} key={idx}>{item.title}</option>
                             })
                         }
                     </select>
