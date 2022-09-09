@@ -12,7 +12,7 @@ export const currency = [
     }, {
         title: "CNY"
     }, {
-        title: "KG"
+        title: "SOM"
     }
 ]
 
