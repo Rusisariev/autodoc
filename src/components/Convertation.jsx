@@ -14,11 +14,15 @@ const Convertation = () => {
         outgoing_amount: 0,
         client_course: 0,
         our_company_name: 0,
-        our_company_bank_name: 0
+        our_company_bank_name: 0,
+        inner_trades: []
     })
     const [docx, setDocx] = useState(false)
     const [al, setAl] = useState(false)
     const [error, setError] = useState(false)
+    const [innerTraids, setInnerTraids] = useState([])
+
+    console.log(convertationState)
 
     const handlerChange = (e) => {
         const {name, value} = e.target
@@ -28,13 +32,33 @@ const Convertation = () => {
         }))
     }
 
+    const handlerChangeMulti = (e) => {
+        const {options} = e.target
+        let value = [];
+        for (let i = 0, l = options.length; i < l; i++) {
+            if (options[i].selected) {
+                value.push(options[i].value);
+            }
+        }
+        setConvertationState(prevState => ({
+            ...prevState,
+            inner_trades: value
+        }))
+    }
+
     const getCompanies = async () => {
         const res = await axiosSSR.get("/api/companies/")
         setCompanies(res.data)
     }
 
+    const getInnerTraids = async () => {
+        const res = await axiosSSR.get("/api/inner_traids/")
+        setInnerTraids(res.data)
+    }
+
     useEffect(() => {
         getCompanies()
+        getInnerTraids()
     }, [])
 
     useEffect(() => {
@@ -70,7 +94,8 @@ const Convertation = () => {
             outgoing_amount: +convertationState.outgoing_amount,
             client_course: convertationState.client_course,
             our_company_name: +convertationState.our_company_name,
-            our_company_bank_name: +convertationState.our_company_bank_name
+            our_company_bank_name: +convertationState.our_company_bank_name,
+            inner_trades: convertationState.inner_trades
         }
         const doc = await axiosSSR.post("/api/convertations/", data).then(res => {
             setConvertationState({
@@ -186,6 +211,19 @@ const Convertation = () => {
                             // })
                             companies?.find(el => el.id === Number(convertationState.our_company_name))?.banks?.map((item, idx) => (
                                 <option key={idx} value={item.id}>{item.company_bank_name_en}</option>
+                            ))
+                        }
+                    </select>
+                </div>
+            </div>
+            <div className="row mt-3">
+                <p className="mb-0 col-4">Внутренние сделки:</p>
+                <div className="col-8">
+                    <select multiple className="form-select" aria-label="Default select example" name="inner_trades" value={convertationState.inner_trades} onChange={handlerChangeMulti} required>
+                        <option defaultValue>...</option>
+                        {
+                            innerTraids?.map((item, idx) => (
+                                <option key={idx} value={item.id}>{item.id}</option>
                             ))
                         }
                     </select>

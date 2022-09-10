@@ -6,7 +6,7 @@ import Profile from "./components/Profile";
 import Convertation from "./components/Convertation";
 import Request from "./components/Request";
 import Navbar from "./components/Navbar"
-import Traids from "./components/Traids";
+import InnerTraids from "./components/InnerTraids";
 
 const App = () => {
     const location = useLocation()
@@ -21,7 +21,7 @@ const App = () => {
                     <Route path="/profile" element={<Profile/>}/>
                     <Route path="/convertation" element={<Convertation/>}/>
                     <Route path="/request" element={<Request/>}/>
-                    <Route path="/traids" element={<Traids/>}/>
+                    <Route path="/inner-traids" element={<InnerTraids/>} />
                     <Route path="*" element={<NotFound/>}/>
                 </Routes>
             </div>
