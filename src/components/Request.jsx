@@ -25,19 +25,27 @@ const Request = () => {
     const [requestState, setRequestState] = useState({
         currency: "",
         price: 0,
-        productOrService: "",
-        sellOrBuy: "",
-        ourCompany: "",
-        bankOfOurCompany: "",
-        counterPartyCompany: "",
-        counterPartyBank: "",
-        productCategory: "",
-        status: true
+        product_or_service: "",
+        sell_or_buy: "",
+        status: true,
+        date: "",
+        deal_number: 0,
+        mode: "",
+        client_course: 0,
+        outgoing_currency: "",
+        internal_course: 0,
+        outgoing_amount: 0,
+        to_company: 0,
+        bank: 0,
+        from_company: 0,
+        counterparty_bank: "",
+        product_category: ""
     })
     const [companies, setCompanies] = useState([])
     const [products, setProducts] = useState([])
     const [al, setAl] = useState(false)
     const [error, setError] = useState(false)
+    const [docx, setDocx] = useState(false)
 
     const handlerChange = (e) => {
         const {name, value} = e.target
@@ -53,7 +61,7 @@ const Request = () => {
     }
 
     const getProducts = async () => {
-        const res = await axiosSSR.get("/api/products/")
+        const res = await axiosSSR.get("/api/sub_categories/")
         setProducts(res.data)
     }
 
@@ -81,53 +89,74 @@ const Request = () => {
         const data = {
             currency: requestState.currency,
             price: requestState.price,
-            product_or_service: requestState.productOrService,
-            sell_or_buy: requestState.sellOrBuy,
+            product_or_service: requestState.product_or_service,
+            sell_or_buy: requestState.sell_or_buy,
             status: requestState.status,
-            to_company: +requestState.ourCompany,
-            bank: +requestState.bankOfOurCompany,
-            from_company: +requestState.counterPartyCompany,
-            counterparty_bank: +requestState.counterPartyBank,
-            product_category: +requestState.productCategory
+            date: requestState.date,
+            deal_number: requestState.deal_number,
+            mode: requestState.mode,
+            client_course: requestState.client_course,
+            outgoing_currency: requestState.outgoing_currency,
+            internal_course: requestState.internal_course,
+            outgoing_amount: requestState.outgoing_amount,
+            to_company: requestState.to_company,
+            bank: requestState.bank,
+            from_company: requestState.from_company,
+            counterparty_bank: requestState.counterparty_bank,
+            product_category: requestState.product_category
         }
         await axiosSSR.post("/api/request/", data).then(res => {
             setRequestState({
                 currency: "",
                 price: 0,
-                productOrService: "",
-                sellOrBuy: "",
-                ourCompany: "",
-                bankOfOurCompany: "",
-                counterPartyCompany: "",
-                counterPartyBank: "",
-                productCategory: "",
-                status: true
+                product_or_service: "",
+                sell_or_buy: "",
+                status: true,
+                date: "",
+                deal_number: 0,
+                mode: "",
+                client_course: 0,
+                outgoing_currency: "",
+                internal_course: 0,
+                outgoing_amount: 0,
+                to_company: 0,
+                bank: 0,
+                from_company: 0,
+                counterparty_bank: "",
+                product_category: ""
             })
             if(res?.error?.statusCode === 400){
                 setError(true)
                 return res
             }
             setAl(true)
+            setDocx(res.data)
             return res
         })
     }
-
     const clearState = (e) => {
         e.preventDefault()
         setRequestState({
             currency: "",
             price: 0,
-            productOrService: "",
-            sellOrBuy: "",
-            ourCompany: "",
-            bankOfOurCompany: "",
-            counterPartyCompany: "",
-            counterPartyBank: "",
-            productCategory: "",
-            status: true
+            product_or_service: "",
+            sell_or_buy: "",
+            status: true,
+            date: "",
+            deal_number: 0,
+            mode: "",
+            client_course: 0,
+            outgoing_currency: "",
+            internal_course: 0,
+            outgoing_amount: 0,
+            to_company: 0,
+            bank: 0,
+            from_company: 0,
+            counterparty_bank: "",
+            product_category: ""
         })
     }
-
+    console.log(requestState);
     return (
         <>
             <form onSubmit={handlerClick}>
@@ -153,7 +182,7 @@ const Request = () => {
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Товар или услуга:</p>
                     <div className="col-8">
-                        <select className="form-select" aria-label="Default select example" name="productOrService" value={requestState.productOrService} onChange={handlerChange} required>
+                        <select className="form-select" aria-label="Default select example" name="product_or_service" value={requestState.product_or_service} onChange={handlerChange} required>
                             <option defaultValue>...</option>
                             <option value="Product">Product</option>
                             <option value="Service">Service</option>
@@ -163,7 +192,7 @@ const Request = () => {
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Продать или купить:</p>
                     <div className="col-8">
-                        <select className="form-select" aria-label="Default select example" name="sellOrBuy" value={requestState.sellOrBuy} onChange={handlerChange} required>
+                        <select className="form-select" aria-label="Default select example" name="sell_or_buy" value={requestState.sell_or_buy} onChange={handlerChange} required>
                             <option defaultValue>...</option>
                             <option value="Sell">Sell</option>
                             <option value="Buy">Buy</option>
@@ -171,9 +200,62 @@ const Request = () => {
                     </div>
                 </div>
                 <div className="row mt-3 align-items-center">
+                    <p className="mb-0 col-4">Дата:</p>
+                    <div className="col-8">
+                        <input type="date" className="form-control" value={requestState.date} name="date" onChange={handlerChange} />
+                    </div>
+                </div>
+                <div className="row mt-3 align-items-center">
+                    <p className="mb-0 col-4">Номер сделки:</p>
+                    <div className="col-8">
+                        <input type="number" className="form-control" value={requestState.deal_number} name="deal_number" onChange={handlerChange} />
+                    </div>
+                </div>
+                <div className="row mt-3 align-items-center">
+                    <p className="mb-0 col-4">Режим:</p>
+                    <div className="col-8">
+                        <select className="form-select" aria-label="Default select example" name="mode" value={requestState.mode} onChange={handlerChange} required>
+                            <option defaultValue>...</option>
+                            <option value="Bank client">Bank client</option>
+                            <option value="Operator">Operator</option>
+                        </select>
+                    </div>
+                </div>
+                <div className="row mt-3 align-items-center">
+                    <p className="mb-0 col-4">Клиентский курс:</p>
+                    <div className="col-8">
+                        <input type="number" className="form-control" name="client_course" value={requestState.client_course} onChange={handlerChange} />
+                    </div>
+                </div>
+                <div className="row mt-3 align-items-center">
+                    <p className="mb-0 col-4">Исходящая валюта:</p>
+                    <div className="col-8">
+                        <select className="form-select" aria-label="Default select example" name="outgoing_currency" value={requestState.outgoing_currency} onChange={handlerChange} required>
+                            <option defaultValue>...</option>
+                            {
+                                currency.map((item, idx) => {
+                                    return <option value={item.meaning} key={idx}>{item.title}</option>
+                                })
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div className="row mt-3 align-items-center">
+                    <p className="mb-0 col-4">Внутренний курс:</p>
+                    <div className="col-8">
+                        <input type="number" className="form-control" name="internal_course" value={requestState.internal_course} onChange={handlerChange} />
+                    </div>
+                </div>
+                <div className="row mt-3 align-items-center">
+                    <p className="mb-0 col-4">Исходящая сумма:</p>
+                    <div className="col-8">
+                        <input type="number" className="form-control" name="outgoing_amount" value={requestState.outgoing_amount} onChange={handlerChange} />
+                    </div>
+                </div>
+                <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Наша компания:</p>
                     <div className="col-8">
-                        <select className="form-select" aria-label="Default select example" name="ourCompany" value={requestState.ourCompany} onChange={handlerChange} required>
+                        <select className="form-select" aria-label="Default select example" name="to_company" value={requestState.to_company} onChange={handlerChange} required>
                             <option defaultValue>...</option>
                             {
                                 companies?.map((item, idx) => (
@@ -188,15 +270,10 @@ const Request = () => {
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Банк нашей компании:</p>
                     <div className="col-8">
-                        <select className="form-select" aria-label="Default select example" name="bankOfOurCompany" value={requestState.bankOfOurCompany} onChange={handlerChange} required>
+                        <select className="form-select" aria-label="Default select example" name="bank" value={requestState.bank} onChange={handlerChange} required>
                             <option defaultValue>...</option>
                             {
-                                // companies.map((item, idx) => {
-                                //     return item.banks.map((element, idx) => {
-                                //         return <option key={idx} value={element.id}>{item.company_short_name_en}, {element.company_bank_name_en}</option>
-                                //     })
-                                // })
-                                companies?.find(el => el.id === Number(requestState.ourCompany))?.banks?.map((item, idx) => (
+                                companies?.find(el => el.id === Number(requestState.to_company))?.banks?.map((item, idx) => (
                                     <option key={idx} value={item.id}>{item.company_bank_name_en}</option>
                                 ))
                             }
@@ -206,7 +283,7 @@ const Request = () => {
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Компания контрагента:</p>
                     <div className="col-8">
-                        <select className="form-select" aria-label="Default select example" name="counterPartyCompany" value={requestState.counterPartyCompany} onChange={handlerChange} required>
+                        <select className="form-select" aria-label="Default select example" name="from_company" value={requestState.from_company} onChange={handlerChange} required>
                             <option defaultValue>...</option>
                             {
                                 companies?.map((item, idx) => (
@@ -221,15 +298,10 @@ const Request = () => {
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Банк контрагента:</p>
                     <div className="col-8">
-                        <select className="form-select" aria-label="Default select example" name="counterPartyBank" value={requestState.counterPartyBank} onChange={handlerChange} required>
+                        <select className="form-select" aria-label="Default select example" name="counterparty_bank" value={requestState.counterparty_bank} onChange={handlerChange} required>
                             <option defaultValue>...</option>
                             {
-                                // companies.map((item, idx) => {
-                                //     return item.banks.map((element, idx) => {
-                                //         return <option key={idx} value={element.id}>{item.company_short_name_en}, {element.company_bank_name_en}</option>
-                                //     })
-                                // })
-                                companies?.find(el => el.id === Number(requestState.counterPartyCompany))?.banks?.map((item, idx) => (
+                                companies?.find(el => el.id === Number(requestState.from_company))?.banks?.map((item, idx) => (
                                     <option key={idx} value={item.id}>{item.company_bank_name_en}</option>
                                 ))
                             }
@@ -239,7 +311,7 @@ const Request = () => {
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Категория продукта:</p>
                     <div className="col-8">
-                        <select className="form-select" aria-label="Default select example" name="productCategory" value={requestState.productCategory} onChange={handlerChange} required>
+                        <select className="form-select" aria-label="Default select example" name="product_category" value={requestState.product_category} onChange={handlerChange} required>
                             <option defaultValue>...</option>
                             {
                                 products?.map((item, idx) => (
@@ -251,9 +323,16 @@ const Request = () => {
                         </select>
                     </div>
                 </div>
-                <div className='d-flex justify-content-end mb-5 mt-3 align-items-center'>
-                    <button className="btn btn-danger me-3" onClick={clearState}>Сбросить</button>
-                    <button className="btn btn-primary" type="submit">Отправить</button>
+                <div className='d-flex justify-content-between mb-5 mt-3 align-items-center'>
+                    <div>
+                        {
+                            docx ? <a href={docx.traid} download>Скачать документ</a> : null
+                        }
+                    </div>
+                    <div>
+                        <button className="btn btn-danger me-3" onClick={clearState}>Сбросить</button>
+                        <button className="btn btn-primary" type="submit">Отправить</button>
+                    </div>
                 </div>
             </form>
             <div className={al ? "alert-custom" : "alert-custom hidden"}>

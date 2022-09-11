@@ -22,6 +22,7 @@ const InnerTraids = () => {
     const [error, setError] = useState(false)
     const [docx, setDocx] = useState(false)
     const [products, setProducts] = useState([])
+    const [categories, setCategories] = useState([])
 
     const getCompanies = async () => {
         const res = await axiosSSR.get("/api/companies/")
@@ -33,9 +34,15 @@ const InnerTraids = () => {
         setProducts(res.data)
     }
 
+    const getCategories = async () => {
+        const res = await axiosSSR.get("/api/categories/")
+        setCategories(res.data)
+    }
+
     useEffect(() => {
         getCompanies()
         getProducts()
+        getCategories()
     }, [])
 
     useEffect(() => {
@@ -85,7 +92,7 @@ const InnerTraids = () => {
             buyer_bank_name: innerTraidsState.buyer_bank_name,
             seller_name: innerTraidsState.seller_name,
             seller_bank_name: innerTraidsState.seller_bank_name,
-            category: 1,
+            category: innerTraidsState.category,
             product: innerTraidsState.product
         }
         const doc = await axiosSSR.post("/api/inner_traids/", data).then(res => {
@@ -208,9 +215,9 @@ const InnerTraids = () => {
                         <select className="form-select" aria-label="Default select example" name="category" value={innerTraidsState.category} onChange={handlerChange} required>
                             <option defaultValue>...</option>
                             {
-                                companies?.map((item, idx) => (
+                                categories?.map((item, idx) => (
                                     <option value={item.id} key={idx}>
-                                        {item.company_short_name_en}
+                                        {item.name}
                                     </option>
                                 ))
                             }
