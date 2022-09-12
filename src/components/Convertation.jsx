@@ -22,7 +22,12 @@ const Convertation = () => {
     const [error, setError] = useState(false)
     const [innerTraids, setInnerTraids] = useState([])
 
-    console.log(convertationState)
+    useEffect(() => {
+        setConvertationState(prevState => ({
+            ...prevState,
+            outgoing_amount: convertationState.internal_course * convertationState.incoming_amount
+        }))
+    }, [convertationState.internal_course, convertationState.incoming_amount])
 
     const handlerChange = (e) => {
         const {name, value} = e.target
