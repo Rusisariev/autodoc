@@ -30,9 +30,9 @@ const Request = () => {
         date: "",
         deal_number: 0,
         mode: "",
-        client_course: 0,
+        client_course: 0.00,
         outgoing_currency: "",
-        internal_course: 0,
+        internal_course: 0.00,
         outgoing_amount: 0,
         to_company: 0,
         bank: 0,
@@ -155,7 +155,12 @@ const Request = () => {
             product_category: ""
         })
     }
-    console.log(requestState);
+    useEffect(() => {
+        setRequestState(prevState => ({
+            ...prevState,
+            price: requestState.outgoing_amount * requestState.client_course
+        }))
+    }, [requestState.outgoing_amount, requestState.client_course])
     return (
         <>
             <form onSubmit={handlerClick}>
@@ -170,12 +175,6 @@ const Request = () => {
                                 })
                             }
                         </select>
-                    </div>
-                </div>
-                <div className="row mt-3 align-items-center">
-                    <p className="mb-0 col-4">Цена:</p>
-                    <div className="col-8">
-                        <input type="number" className="form-control" min="0" name="price" value={requestState.price} onChange={handlerChange} required/>
                     </div>
                 </div>
                 <div className="row mt-3 align-items-center">
@@ -223,7 +222,7 @@ const Request = () => {
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Клиентский курс:</p>
                     <div className="col-8">
-                        <input type="number" className="form-control" name="client_course" value={requestState.client_course} onChange={handlerChange} />
+                        <input type="number" step="0.01" className="form-control" name="client_course" value={requestState.client_course} onChange={handlerChange} />
                     </div>
                 </div>
                 <div className="row mt-3 align-items-center">
@@ -242,13 +241,19 @@ const Request = () => {
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Внутренний курс:</p>
                     <div className="col-8">
-                        <input type="number" className="form-control" name="internal_course" value={requestState.internal_course} onChange={handlerChange} />
+                        <input type="number" step="0.01" className="form-control" name="internal_course" value={requestState.internal_course} onChange={handlerChange} />
                     </div>
                 </div>
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Исходящая сумма:</p>
                     <div className="col-8">
                         <input type="number" className="form-control" name="outgoing_amount" value={requestState.outgoing_amount} onChange={handlerChange} />
+                    </div>
+                </div>
+                <div className="row mt-3 align-items-center">
+                    <p className="mb-0 col-4">Входящая сумму:</p>
+                    <div className="col-8">
+                        <input type="number" className="form-control" min="0" name="price" value={requestState.price} onChange={handlerChange} required/>
                     </div>
                 </div>
                 <div className="row mt-3 align-items-center">
