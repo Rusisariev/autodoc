@@ -227,8 +227,8 @@ const Convertation = () => {
                     <select multiple className="form-select" aria-label="Default select example" name="inner_trades" value={convertationState.inner_trades} onChange={handlerChangeMulti} required>
                         <option defaultValue>...</option>
                         {
-                            innerTraids?.map((item, idx) => (
-                                <option key={idx} value={item.id}>{item.id}</option>
+                            innerTraids?.reverse((a, b) => new Date(a.date) - new Date(b.date)).map((item, idx) => (
+                                <option key={idx} value={item.id}>{item.id}, {item.date}</option>
                             ))
                         }
                     </select>
