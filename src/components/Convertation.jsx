@@ -62,8 +62,8 @@ const Convertation = () => {
     }
 
     useEffect(() => {
-        getCompanies()
-        getInnerTraids()
+        getCompanies().then(res => res)
+        getInnerTraids().then(res => res)
     }, [])
 
     useEffect(() => {

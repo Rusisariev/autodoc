@@ -7,6 +7,7 @@ import Convertation from "./components/Convertation";
 import Request from "./components/Request";
 import Navbar from "./components/Navbar"
 import InnerTraids from "./components/InnerTraids";
+import Dashboard from "./components/Dashboard";
 
 const App = () => {
     const location = useLocation()
@@ -22,6 +23,7 @@ const App = () => {
                     <Route path="/convertation" element={<Convertation/>}/>
                     <Route path="/request" element={<Request/>}/>
                     <Route path="/inner-traids" element={<InnerTraids/>} />
+                    <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="*" element={<NotFound/>}/>
                 </Routes>
             </div>
