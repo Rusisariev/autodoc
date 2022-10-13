@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import { useNavigate } from 'react-router-dom';
 import axiosSSR from "../axios";
 
 export const currency = [
@@ -21,6 +22,7 @@ export const currency = [
 ]
 
 const Request = () => {
+    const navigate = useNavigate()
     const [requestState, setRequestState] = useState({
         currency: "",
         price: 0,
@@ -65,8 +67,12 @@ const Request = () => {
     }
 
     useEffect(() => {
-        getCompanies()
-        getProducts()
+        if(!window.localStorage.getItem("token")){
+            navigate("/")
+        }else{
+            getCompanies()
+            getProducts()
+        }
     }, [])
 
     useEffect(() => {

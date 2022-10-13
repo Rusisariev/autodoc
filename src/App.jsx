@@ -1,5 +1,5 @@
 import React from "react";
-import {Route, Routes, useLocation} from "react-router-dom";
+import {Link, Route, Routes, useLocation} from "react-router-dom";
 import Login from "./components/Login";
 import NotFound from "./components/NotFound";
 import Profile from "./components/Profile";
@@ -14,7 +14,9 @@ const App = () => {
     return (
         <>
             {
-                location.pathname !== "/" ? <Navbar /> : null
+                location.pathname !== "/" ? <Navbar /> : <div className="d-flex justify-content-end container position-absolute mt-3">
+                    <Link to="/dashboard" className={location.pathname === "/dashboard" ? "nav-link active" : "nav-link"}>Доска</Link>
+                </div>
             }
             <div className="container">
                 <Routes>

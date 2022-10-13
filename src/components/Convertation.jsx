@@ -1,8 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {currency} from "./Request";
 import axiosSSR from "../axios";
+import { useNavigate } from 'react-router-dom';
 
 const Convertation = () => {
+    const navigate = useNavigate()
     const [companies, setCompanies] = useState([])
     const [convertationState, setConvertationState] = useState({
         date: "",
@@ -21,7 +23,7 @@ const Convertation = () => {
     const [al, setAl] = useState(false)
     const [error, setError] = useState(false)
     const [innerTraids, setInnerTraids] = useState([])
-
+    
     useEffect(() => {
         setConvertationState(prevState => ({
             ...prevState,
@@ -62,8 +64,12 @@ const Convertation = () => {
     }
 
     useEffect(() => {
-        getCompanies().then(res => res)
-        getInnerTraids().then(res => res)
+        if(!window.localStorage.getItem("token")){
+            navigate("/")
+        }else{
+            getCompanies().then(res => res)
+            getInnerTraids().then(res => res)
+        }
     }, [])
 
     useEffect(() => {

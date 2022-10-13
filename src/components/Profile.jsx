@@ -19,7 +19,11 @@ const Profile = () => {
     }
 
     useEffect(() => {
-        getUser()
+        if(!window.localStorage.getItem("token")){
+            navigate("/")
+        }else{
+            getUser()
+        }
     }, [])
 
     return (

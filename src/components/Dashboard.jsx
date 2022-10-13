@@ -4,6 +4,7 @@ import axiosSSR from "../axios";
 
 const Dashboard = () => {
     const [dashboard, setDashboard] = useState([]);
+    const [superUser, setSuperUser] = useState(false);
 
     const patchDashboard = async (id, status) => {
         const res = await axiosSSR.patch(`/api/inner_traids_dashboard/${id}/`, {
@@ -17,8 +18,20 @@ const Dashboard = () => {
         setDashboard(res.data);
     };
 
+    const getUser = async () => {
+        const res = await axiosSSR
+            .get("/api/users/profile/")
+            .then((res) => res);
+        if (res.data) {
+            setSuperUser(res.data.is_superuser);
+        }
+    };
+
     useEffect(() => {
         getDashboard();
+        if(window.localStorage.getItem("token")){
+            getUser();
+        }
     }, []);
 
     return (
@@ -30,31 +43,36 @@ const Dashboard = () => {
                     .map((item) => (
                         <div className="card" key={item.id}>
                             <div className="d-flex justify-content-between">
-                                <p>
+                                <p className="mb-0">
                                     {item.deal_number}, {item.date}
                                 </p>
                                 <a href={item.inner_traid} download>
                                     Скачать файл
                                 </a>
                             </div>
-                            <div className="d-flex">
-                                <button
-                                    className="btn btn-primary me-2"
-                                    onClick={() =>
-                                        patchDashboard(item.id, "In progress")
-                                    }
-                                >
-                                    К выполнению
-                                </button>
-                                <button
-                                    className="btn btn-primary"
-                                    onClick={() =>
-                                        patchDashboard(item.id, "Done")
-                                    }
-                                >
-                                    В готово
-                                </button>
-                            </div>
+                            {superUser ? (
+                                <div className="d-flex mt-2">
+                                    <button
+                                        className="btn btn-primary me-2"
+                                        onClick={() =>
+                                            patchDashboard(
+                                                item.id,
+                                                "In progress"
+                                            )
+                                        }
+                                    >
+                                        К выполнению
+                                    </button>
+                                    <button
+                                        className="btn btn-primary"
+                                        onClick={() =>
+                                            patchDashboard(item.id, "Done")
+                                        }
+                                    >
+                                        В готово
+                                    </button>
+                                </div>
+                            ) : null}
                         </div>
                     ))}
             </div>
@@ -65,23 +83,25 @@ const Dashboard = () => {
                     .map((item) => (
                         <div className="card" key={item.id}>
                             <div className="d-flex justify-content-between">
-                                <p>
+                                <p className="mb-0">
                                     {item.deal_number}, {item.date}
                                 </p>
                                 <a href={item.inner_traid} download>
                                     Скачать файл
                                 </a>
                             </div>
-                            <div className="d-flex">
-                                <button
-                                    className="btn btn-primary"
-                                    onClick={() =>
-                                        patchDashboard(item.id, "Done")
-                                    }
-                                >
-                                    В готово
-                                </button>
-                            </div>
+                            {superUser ? (
+                                <div className="d-flex mt-2">
+                                    <button
+                                        className="btn btn-primary"
+                                        onClick={() =>
+                                            patchDashboard(item.id, "Done")
+                                        }
+                                    >
+                                        В готово
+                                    </button>
+                                </div>
+                            ) : null}
                         </div>
                     ))}
             </div>
@@ -92,7 +112,7 @@ const Dashboard = () => {
                     .map((item) => (
                         <div className="card" key={item.id}>
                             <div className="d-flex justify-content-between">
-                                <p>
+                                <p className="mb-0">
                                     {item.deal_number}, {item.date}
                                 </p>
                                 <a href={item.inner_traid} download>

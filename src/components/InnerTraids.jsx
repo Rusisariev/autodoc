@@ -1,10 +1,12 @@
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axiosSSR from "../axios";
 import { currency } from "./Request";
 
 const InnerTraids = () => {
+    const navigate = useNavigate()
     const [innerTraidsState, setInnerTraidsState] = useState({
         date: "",
         deal_number: 0,
@@ -40,9 +42,13 @@ const InnerTraids = () => {
     }
 
     useEffect(() => {
-        getCompanies()
-        getProducts()
-        getCategories()
+        if(!window.localStorage.getItem("token")){
+            navigate("/")
+        }else{
+            getCompanies()
+            getProducts()
+            getCategories()
+        }
     }, [])
 
     useEffect(() => {
