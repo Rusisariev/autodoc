@@ -61,7 +61,7 @@ const Dashboard = () => {
                                             )
                                         }
                                     >
-                                        В процесе
+                                        В процессе
                                     </button>
                                     <button
                                         className="btn btn-primary"
@@ -77,7 +77,7 @@ const Dashboard = () => {
                     ))}
             </div>
             <div className="dashboard-item">
-                <h5>В процесе</h5>
+                <h5>В процессе</h5>
                 {dashboard
                     .filter((el) => el.status === "In progress")
                     .map((item) => (
@@ -146,7 +146,7 @@ const Dashboard = () => {
                                             )
                                         }
                                     >
-                                        В процесе
+                                        В процессе
                                     </button>
                                 </div>
                             ) : null}
