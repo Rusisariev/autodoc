@@ -10,9 +10,27 @@
     .card{
       padding: 20px;
       margin-bottom: 10px;
+      cursor: pointer;
     }
     .card:last-child{
       margin-bottom: 0;
+    }
+  }
+  .dashboard-modal{
+    position: fixed;
+    background: #00000050;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    .dashboard-modal-content{
+      border: 1px solid #ccc;
+      background: #fff;
+      border-radius: 8px;
+      padding: 20px;
     }
   }
 }
