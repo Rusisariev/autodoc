@@ -11,5 +11,16 @@
       padding: 20px;
       margin-bottom: 10px;
     }
+    .card:last-child{
+      margin-bottom: 0;
+    }
+  }
+}
+@media (max-width: 992px) {
+  .dashboard{
+    grid-template-columns: 1fr;
+    .dashboard-item{
+      min-height: unset;
+    }
   }
 }

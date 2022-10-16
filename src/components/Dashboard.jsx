@@ -42,9 +42,9 @@ const Dashboard = () => {
                     .filter((el) => el.status === "Todo")
                     .map((item) => (
                         <div className="card" key={item.id}>
-                            <div className="d-flex justify-content-between">
+                            <div className="d-flex flex-column justify-content-between">
                                 <p className="mb-0">
-                                    {item.deal_number}, {item.date}
+                                    {item.buyer_company_name}, {item.seller_company_name}
                                 </p>
                                 <a href={item.inner_traid} download>
                                     Скачать файл
@@ -61,7 +61,7 @@ const Dashboard = () => {
                                             )
                                         }
                                     >
-                                        К выполнению
+                                        В процесе
                                     </button>
                                     <button
                                         className="btn btn-primary"
@@ -82,9 +82,9 @@ const Dashboard = () => {
                     .filter((el) => el.status === "In progress")
                     .map((item) => (
                         <div className="card" key={item.id}>
-                            <div className="d-flex justify-content-between">
+                            <div className="d-flex flex-column justify-content-between">
                                 <p className="mb-0">
-                                    {item.deal_number}, {item.date}
+                                    {item.buyer_company_name}, {item.seller_company_name}
                                 </p>
                                 <a href={item.inner_traid} download>
                                     Скачать файл
@@ -92,6 +92,14 @@ const Dashboard = () => {
                             </div>
                             {superUser ? (
                                 <div className="d-flex mt-2">
+                                     <button
+                                        className="btn btn-primary me-2"
+                                        onClick={() =>
+                                            patchDashboard(item.id, "Todo")
+                                        }
+                                    >
+                                        К выполнению
+                                    </button>
                                     <button
                                         className="btn btn-primary"
                                         onClick={() =>
@@ -111,14 +119,37 @@ const Dashboard = () => {
                     .filter((el) => el.status === "Done")
                     .map((item) => (
                         <div className="card" key={item.id}>
-                            <div className="d-flex justify-content-between">
+                            <div className="d-flex flex-column justify-content-between">
                                 <p className="mb-0">
-                                    {item.deal_number}, {item.date}
+                                    {item.buyer_company_name}, {item.seller_company_name}
                                 </p>
                                 <a href={item.inner_traid} download>
                                     Скачать файл
                                 </a>
                             </div>
+                            {superUser ? (
+                                <div className="d-flex mt-2">
+                                    <button
+                                        className="btn btn-primary me-2"
+                                        onClick={() =>
+                                            patchDashboard(item.id, "Todo")
+                                        }
+                                    >
+                                        К выполнению
+                                    </button>
+                                    <button
+                                        className="btn btn-primary me-2"
+                                        onClick={() =>
+                                            patchDashboard(
+                                                item.id,
+                                                "In progress"
+                                            )
+                                        }
+                                    >
+                                        В процесе
+                                    </button>
+                                </div>
+                            ) : null}
                         </div>
                     ))}
             </div>
