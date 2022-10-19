@@ -20,6 +20,13 @@ const Dashboard = () => {
         setDashboard(res.data);
     };
 
+    const patchStatusUrgent = async (id, urgent) => {
+        const res = await axiosSSR.patch(`/api/inner_traids_dashboard/${id}/`, {
+            urgent: urgent,
+        });
+        getDashboard();
+    };
+
     const getUser = async () => {
         const res = await axiosSSR
             .get("/api/users/profile/")
@@ -43,13 +50,14 @@ const Dashboard = () => {
 
     return (
         <div className="dashboard">
-            <div className="dashboard-item">
-                <h5>К выполнению</h5>
+            <div className="dashboard-item bg-warning">
+                <h5 className="text-white">К выполнению</h5>
                 {dashboard
                     .filter((el) => el.status === "Todo")
+                    .sort((a, b) => (a === b)? 0 : a? -1 : 1)
                     .map((item) => (
                         <div
-                            className="card"
+                            className={item.urgent ? "card bg-danger" : "card"}
                             key={item.id}
                             onClick={() => {
                                 getDetail(item.id);
@@ -63,40 +71,57 @@ const Dashboard = () => {
                                 </p>
                             </div>
                             {superUser ? (
-                                <div className="d-flex mt-2">
-                                    <button
-                                        className="btn btn-primary me-2"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            patchDashboard(
-                                                item.id,
-                                                "In progress"
-                                            );
-                                        }}
-                                    >
-                                        В процессе
-                                    </button>
-                                    <button
-                                        className="btn btn-primary"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            patchDashboard(item.id, "Done");
-                                        }}
-                                    >
-                                        В готово
-                                    </button>
+                                <div>
+                                    <div className="d-flex mt-2">
+                                        <button
+                                            className="btn btn-primary me-2"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                patchDashboard(
+                                                    item.id,
+                                                    "In progress"
+                                                );
+                                            }}
+                                        >
+                                            В процессе
+                                        </button>
+                                        <button
+                                            className="btn btn-primary"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                patchDashboard(item.id, "Done");
+                                            }}
+                                        >
+                                            В готово
+                                        </button>
+                                    </div>
+                                    <div className="mt-2">
+                                        <button
+                                            className="btn btn-danger"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                patchStatusUrgent(
+                                                    item.id,
+                                                    true
+                                                );
+                                            }}
+                                        >
+                                            В спешке
+                                        </button>
+                                    </div>
                                 </div>
                             ) : null}
                         </div>
                     ))}
             </div>
-            <div className="dashboard-item">
-                <h5>В процессе</h5>
+            <div className="dashboard-item bg-primary">
+                <h5 className="text-white">В процессе</h5>
                 {dashboard
                     .filter((el) => el.status === "In progress")
+                    .sort((a, b) => (a === b)? 0 : a? -1 : 1)
                     .map((item) => (
                         <div
-                            className="card"
+                            className={item.urgent ? "card bg-danger" : "card"}
                             key={item.id}
                             onClick={() => {
                                 getDetail(item.id);
@@ -110,32 +135,48 @@ const Dashboard = () => {
                                 </p>
                             </div>
                             {superUser ? (
-                                <div className="d-flex mt-2">
-                                    <button
-                                        className="btn btn-primary me-2"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            patchDashboard(item.id, "Todo");
-                                        }}
-                                    >
-                                        К выполнению
-                                    </button>
-                                    <button
-                                        className="btn btn-primary"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            patchDashboard(item.id, "Done");
-                                        }}
-                                    >
-                                        В готово
-                                    </button>
+                                <div>
+                                    <div className="d-flex mt-2">
+                                        <button
+                                            className="btn btn-primary me-2"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                patchDashboard(item.id, "Todo");
+                                            }}
+                                        >
+                                            К выполнению
+                                        </button>
+                                        <button
+                                            className="btn btn-primary me-2"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                patchDashboard(item.id, "Done");
+                                            }}
+                                        >
+                                            В готово
+                                        </button>
+                                    </div>
+                                    <div className="mt-2">
+                                        <button
+                                            className="btn btn-danger"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                patchStatusUrgent(
+                                                    item.id,
+                                                    true
+                                                );
+                                            }}
+                                        >
+                                            В спешке
+                                        </button>
+                                    </div>
                                 </div>
                             ) : null}
                         </div>
                     ))}
             </div>
-            <div className="dashboard-item">
-                <h5>Готово</h5>
+            <div className="dashboard-item bg-success">
+                <h5 className="text-white">Готово</h5>
                 {dashboard
                     .filter((el) => el.status === "Done")
                     .map((item) => (
