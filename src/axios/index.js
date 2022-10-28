@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosSSR = axios.create({
-    baseURL: 'http://13.38.55.250:8000',
+    baseURL: 'http://195.38.164.90:8000',
     headers: { 
         'Content-type': 'application/json' 
     },
