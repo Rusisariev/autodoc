@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {Link, Route, Routes, useLocation} from "react-router-dom";
 import Login from "./components/Login";
 import NotFound from "./components/NotFound";
@@ -8,9 +8,18 @@ import Request from "./components/Request";
 import Navbar from "./components/Navbar"
 import InnerTraids from "./components/InnerTraids";
 import Dashboard from "./components/Dashboard";
+import UserCreateRequest from "./components/UserCreateRequest";
+import {getUser} from "./redux/users/action";
+import {useDispatch} from "react-redux";
 
 const App = () => {
     const location = useLocation()
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(getUser())
+    }, [])
+
     return (
         <>
             {
@@ -26,6 +35,7 @@ const App = () => {
                     <Route path="/request" element={<Request/>}/>
                     <Route path="/inner-traids" element={<InnerTraids/>} />
                     <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/user-create-request" element={<UserCreateRequest />}/>
                     <Route path="*" element={<NotFound/>}/>
                 </Routes>
             </div>

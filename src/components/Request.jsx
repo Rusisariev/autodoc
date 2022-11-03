@@ -28,7 +28,7 @@ const Request = () => {
         price: 0,
         product_or_service: "",
         sell_or_buy: "",
-        status: true,
+        status_gen: false,
         date: "",
         deal_number: 0,
         mode: "",
@@ -75,19 +75,19 @@ const Request = () => {
         }
     }, [])
 
-    useEffect(() => {
-        setRequestState(prevState => ({
-            ...prevState,
-            bankOfOurCompany: ""
-        }))
-    }, [requestState.ourCompany])
-
-    useEffect(() => {
-        setRequestState(prevState => ({
-            ...prevState,
-            counterPartyBank: ""
-        }))
-    }, [requestState.counterPartyCompany]) 
+    // useEffect(() => {
+    //     setRequestState(prevState => ({
+    //         ...prevState,
+    //         bankOfOurCompany: ""
+    //     }))
+    // }, [requestState.ourCompany])
+    //
+    // useEffect(() => {
+    //     setRequestState(prevState => ({
+    //         ...prevState,
+    //         counterPartyBank: ""
+    //     }))
+    // }, [requestState.counterPartyCompany])
 
     const handlerClick = async (e) => {
         e.preventDefault()

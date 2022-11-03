@@ -21,10 +21,11 @@ const Dashboard = () => {
     };
 
     const patchStatusUrgent = async (id, urgent) => {
-        const res = await axiosSSR.patch(`/api/inner_traids_dashboard/${id}/`, {
-            urgent: urgent,
-        });
-        getDashboard();
+        await axiosSSR.patch(`/api/inner_traids_dashboard/${id}/`, {
+            urgent: urgent ? false : true,
+        }).then(() => {
+            getDashboard();
+        })
     };
 
     const getUser = async () => {
@@ -64,7 +65,7 @@ const Dashboard = () => {
                                 setModal(true);
                             }}
                         >
-                            <div className="d-flex flex-column justify-content-between">
+                            <div className={item.urgent ? "text-white d-flex flex-column justify-content-between" : "d-flex flex-column justify-content-between"}>
                                 <p className="mb-0">
                                     {item.buyer_company_name},{" "}
                                     {item.seller_company_name}
@@ -97,13 +98,10 @@ const Dashboard = () => {
                                     </div>
                                     <div className="mt-2">
                                         <button
-                                            className="btn btn-danger"
+                                            className={!item.urgent ? "btn btn-danger" : "btn btn-primary"}
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                patchStatusUrgent(
-                                                    item.id,
-                                                    true
-                                                );
+                                                patchStatusUrgent(item.id, item.urgent);
                                             }}
                                         >
                                             В спешке
@@ -128,7 +126,7 @@ const Dashboard = () => {
                                 setModal(true);
                             }}
                         >
-                            <div className="d-flex flex-column justify-content-between">
+                            <div className={item.urgent ? "text-white d-flex flex-column justify-content-between" : "d-flex flex-column justify-content-between"}>
                                 <p className="mb-0">
                                     {item.buyer_company_name},{" "}
                                     {item.seller_company_name}
@@ -158,13 +156,10 @@ const Dashboard = () => {
                                     </div>
                                     <div className="mt-2">
                                         <button
-                                            className="btn btn-danger"
+                                            className={!item.urgent ? "btn btn-danger" : "btn btn-primary"}
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                patchStatusUrgent(
-                                                    item.id,
-                                                    true
-                                                );
+                                                patchStatusUrgent(item.id, item.urgent);
                                             }}
                                         >
                                             В спешке
@@ -179,6 +174,7 @@ const Dashboard = () => {
                 <h5 className="text-white">Готово</h5>
                 {dashboard
                     .filter((el) => el.status === "Done")
+                    .sort((a, b) => (a === b)? 0 : a? -1 : 1)
                     .map((item) => (
                         <div
                             className="card"
@@ -188,7 +184,7 @@ const Dashboard = () => {
                                 setModal(true);
                             }}
                         >
-                            <div className="d-flex flex-column justify-content-between">
+                            <div className={item.urgent ? "text-white d-flex flex-column justify-content-between" : "d-flex flex-column justify-content-between"}>
                                 <p className="mb-0">
                                     {item.buyer_company_name},{" "}
                                     {item.seller_company_name}

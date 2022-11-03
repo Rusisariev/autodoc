@@ -22,7 +22,7 @@ const Convertation = () => {
     const [docx, setDocx] = useState(false)
     const [al, setAl] = useState(false)
     const [error, setError] = useState(false)
-    const [innerTraids, setInnerTraids] = useState([])
+    // const [innerTraids, setInnerTraids] = useState([])
     
     useEffect(() => {
         setConvertationState(prevState => ({
@@ -39,36 +39,36 @@ const Convertation = () => {
         }))
     }
 
-    const handlerChangeMulti = (e) => {
-        const {options} = e.target
-        let value = [];
-        for (let i = 0, l = options.length; i < l; i++) {
-            if (options[i].selected) {
-                value.push(options[i].value);
-            }
-        }
-        setConvertationState(prevState => ({
-            ...prevState,
-            inner_trades: value
-        }))
-    }
+    // const handlerChangeMulti = (e) => {
+    //     const {options} = e.target
+    //     let value = [];
+    //     for (let i = 0, l = options.length; i < l; i++) {
+    //         if (options[i].selected) {
+    //             value.push(options[i].value);
+    //         }
+    //     }
+    //     setConvertationState(prevState => ({
+    //         ...prevState,
+    //         inner_trades: value
+    //     }))
+    // }
 
     const getCompanies = async () => {
         const res = await axiosSSR.get("/api/companies/")
         setCompanies(res.data)
     }
 
-    const getInnerTraids = async () => {
-        const res = await axiosSSR.get("/api/inner_traids/")
-        setInnerTraids(res.data)
-    }
+    // const getInnerTraids = async () => {
+    //     const res = await axiosSSR.get("/api/inner_traids/")
+    //     setInnerTraids(res.data)
+    // }
 
     useEffect(() => {
         if(!window.localStorage.getItem("token")){
             navigate("/")
         }else{
             getCompanies().then(res => res)
-            getInnerTraids().then(res => res)
+            // getInnerTraids().then(res => res)
         }
     }, [])
 
@@ -106,7 +106,7 @@ const Convertation = () => {
             client_course: convertationState.client_course,
             our_company_name: +convertationState.our_company_name,
             our_company_bank_name: +convertationState.our_company_bank_name,
-            inner_trades: convertationState.inner_trades
+            // inner_trades: convertationState.inner_trades
         }
         const doc = await axiosSSR.post("/api/convertations/", data).then(res => {
             setConvertationState({
@@ -215,11 +215,6 @@ const Convertation = () => {
                     <select className="form-select" aria-label="Default select example" name="our_company_bank_name" value={convertationState.our_company_bank_name} onChange={handlerChange} required>
                         <option defaultValue>...</option>
                         {
-                            // companies.map((item, idx) => {
-                            //     return item.banks.map((element, idx) => {
-                            //         return <option key={idx} value={element.id}>{item.company_short_name_en}, {element.company_bank_name_en}</option>
-                            //     })
-                            // })
                             companies?.find(el => el.id === Number(convertationState.our_company_name))?.banks?.map((item, idx) => (
                                 <option key={idx} value={item.id}>{item.company_bank_name_en}</option>
                             ))
@@ -227,20 +222,20 @@ const Convertation = () => {
                     </select>
                 </div>
             </div>
-            <div className="row mt-3">
-                <p className="mb-0 col-4">Внутренние сделки:</p>
-                <div className="col-8">
-                    <select multiple className="form-select" aria-label="Default select example" name="inner_trades" value={convertationState.inner_trades} onChange={handlerChangeMulti} required>
-                        <option defaultValue>...</option>
-                        {
-                            innerTraids?.sort((a, b) => new Date(a.date) - new Date(b.date)).reverse().map((item, idx) => (
-                                <option key={idx} value={item.id}>{item.deal_number}, {item.date}</option>
-                            ))
-                        }
+            {/*<div className="row mt-3">*/}
+            {/*    <p className="mb-0 col-4">Внутренние сделки:</p>*/}
+            {/*    <div className="col-8">*/}
+            {/*        <select multiple className="form-select" aria-label="Default select example" name="inner_trades" value={convertationState.inner_trades} onChange={handlerChangeMulti} required>*/}
+            {/*            <option defaultValue>...</option>*/}
+            {/*            {*/}
+            {/*                innerTraids?.sort((a, b) => new Date(a.date) - new Date(b.date)).reverse().map((item, idx) => (*/}
+            {/*                    <option key={idx} value={item.id}>{item.deal_number}, {item.date}</option>*/}
+            {/*                ))*/}
+            {/*            }*/}
 
-                    </select>
-                </div>
-            </div>
+            {/*        </select>*/}
+            {/*    </div>*/}
+            {/*</div>*/}
             <div className="d-flex justify-content-between mb-5 mt-3 align-items-center">
                 <div>
                     {
