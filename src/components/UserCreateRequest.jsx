@@ -126,8 +126,6 @@ const UserCreateRequest = () => {
         }))
     }
 
-    console.log(newUserCompany)
-
     const handlerNewCompanyClick = async () => {
         const data = new FormData
 
@@ -149,7 +147,6 @@ const UserCreateRequest = () => {
                     bank_requisites_text: ""
                 })
             }
-            console.log(res)
         })
     }
 
