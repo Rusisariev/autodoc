@@ -11,6 +11,8 @@ import Dashboard from "./components/Dashboard";
 import UserCreateRequest from "./components/UserCreateRequest";
 import {getUser} from "./redux/users/action";
 import {useDispatch} from "react-redux";
+import Archive from "./components/Archive";
+import Order from "./components/Order";
 
 const App = () => {
     const location = useLocation()
@@ -36,6 +38,8 @@ const App = () => {
                     <Route path="/inner-traids" element={<InnerTraids/>} />
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/user-create-request" element={<UserCreateRequest />}/>
+                    <Route path="/archive" element={<Archive />} />
+                    <Route path="/order" element={<Order />} />
                     <Route path="*" element={<NotFound/>}/>
                 </Routes>
             </div>

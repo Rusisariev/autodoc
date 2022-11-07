@@ -9,7 +9,7 @@ const Dashboard = () => {
     const [details, setDetails] = useState(0);
 
     const patchDashboard = async (id, status) => {
-        const res = await axiosSSR.patch(`/api/inner_traids_dashboard/${id}/`, {
+        await axiosSSR.patch(`/api/inner_traids_dashboard/${id}/`, {
             status: status,
         });
         getDashboard();
@@ -237,7 +237,7 @@ const Dashboard = () => {
                     </p>
                     <div className="d-flex justify-content-between">
                         <p className="mb-0">
-                            Сумма: {details?.amount_of_payment}
+                            Сумма: {details?.price}
                         </p>
                         <p className="mb-0">{details?.date}</p>
                     </div>
