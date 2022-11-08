@@ -80,7 +80,8 @@ const UserCreateRequest = () => {
             from_company: userCreateRequest.from_company,
             counterparty_bank: userCreateRequest.counterparty_bank,
             currency: userCreateRequest.currency,
-            sell_or_buy: userCreateRequest.sell_or_buy
+            sell_or_buy: userCreateRequest.sell_or_buy,
+            from_client: true
         }
         const res = await axiosSSR.post("/api/user_create_request/", data).then((res) => {
             setUserCreateRequest({
