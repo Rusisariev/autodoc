@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import axiosSSR from "../axios";
+import Forma20 from "./forma_2_0";
 
 const Order = () => {
     const [order, setOrder] = useState([])
@@ -10,8 +11,6 @@ const Order = () => {
         setOrder(res.data)
     }
 
-    console.log(order)
-
     useEffect(() => {
         getArchive().then(res => res)
     }, [])
@@ -20,53 +19,39 @@ const Order = () => {
             {
                 order?.map((item, idx) => {
                     return (
-                        <>
-                            <div
-                                className={"card"}
-                                key={item.id}
-                                onClick={() => {
-                                    // getDetail(item.id);
-                                    setModal(idx);
-                                }}
-                            >
-                                <div className={"d-flex flex-column justify-content-between"}>
-                                    <p className="mb-0">
-                                        {item.buyer_company_name},{" "}
-                                        {item.seller_company_name}
-                                    </p>
-                                </div>
-                            </div>
-                            <div
-                                className="dashboard-modal"
-                                style={!modal ? { display: "none" } : { display: "flex" }}
-                                onClick={() => setModal(null)}
-                            >
+                        <div key={idx}>
+                            <div>
                                 <div
-                                    className="dashboard-modal-content"
-                                    onClick={(e) => e.stopPropagation()}
+                                    className={"card p-2"}
+                                    onClick={() => {
+                                        setModal(item.id);
+                                    }}
                                 >
-                                    <p>Номер заказа: {item?.deal_number}</p>
-                                    <p>Покупатель: {item?.buyer_company_name}</p>
-                                    <p>Продовец: {item?.seller_company_name}</p>
-                                    <p>
-                                        <a href={item?.inner_traid} className="mb-2">
-                                            Cкачать файл
-                                        </a>
-                                    </p>
-                                    <p>
-                                        <a href={item?.traid} className="mb-2">
-                                            Cкачать файл
-                                        </a>
-                                    </p>
-                                    <div className="d-flex justify-content-between">
+                                    <div className={"d-flex flex-column justify-content-between"}>
                                         <p className="mb-0">
-                                            Сумма: {item?.price}
+                                            {item.from_company_name}
                                         </p>
-                                        <p className="mb-0">{item?.date}</p>
                                     </div>
                                 </div>
                             </div>
-                        </>
+                            <div>
+                                <div
+                                    className="dashboard-modal"
+                                    style={modal !== item.id ? { display: "none" } : { display: "flex", zIndex: 1, padding: "20px" }}
+                                    onClick={() => setModal(null)}
+                                >
+                                    <div
+                                        className="dashboard-modal-content"
+                                        style={{overflowY: "auto", height: "60%"}}
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
+                                        <p>Номер заказа: {item?.deal_number}</p>
+                                        <p>Клиент хочет {item.sell_or_buy === "buy" ? "купить" : "продать"}</p>
+                                        <Forma20 content={item} setModal={setModal} getOrder={getArchive} />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     )
                 })
             }

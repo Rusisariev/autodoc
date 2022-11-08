@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {currency} from "./Request";
 import axiosSSR from "../axios";
 import { useNavigate } from 'react-router-dom';
+import CustomSelect from "./CustomSelect";
 
 const Convertation = () => {
     const navigate = useNavigate()
@@ -130,6 +131,14 @@ const Convertation = () => {
         })
         setDocx(doc.data)
     }
+
+    function ourCompanyNameFunc(item) {
+        setConvertationState(prevState => ({
+            ...prevState,
+            our_company_name: item.id
+        }))
+    }
+
     return (
         <div>
             <div className="row mt-3 align-items-center">
@@ -197,16 +206,7 @@ const Convertation = () => {
             <div className="row mt-3 align-items-center">
                 <p className="mb-0 col-4">Название нашей компании:</p>
                 <div className="col-8">
-                    <select className="form-select" aria-label="Default select example" name="our_company_name" value={convertationState.our_company_name} onChange={handlerChange} required>
-                        <option defaultValue>...</option>
-                        {
-                            companies?.map((item, idx) => (
-                                <option value={item.id} key={idx}>
-                                    {item.company_short_name_en}
-                                </option>
-                            ))
-                        }
-                    </select>
+                    <CustomSelect selectCompanyClick={ourCompanyNameFunc} />
                 </div>
             </div>
             <div className="row mt-3 align-items-center">

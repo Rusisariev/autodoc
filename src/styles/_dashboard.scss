@@ -43,3 +43,26 @@
     }
   }
 }
+
+.custom-select{
+  position: relative;
+  .my-list{
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    display: none;
+    z-index: 1;
+    div{
+      cursor: pointer;
+      padding: 2px 10px;
+    }
+    div:hover{
+      background: #3333ff;
+      color: #ffffff;
+    }
+  }
+}

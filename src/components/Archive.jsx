@@ -21,20 +21,18 @@ const Archive = () => {
             {
                 archive?.map((item, idx) => {
                     return (
-                        <>
+                        <div key={idx}>
                             <div
                                 className={"card"}
-                                key={item.id}
                                 onClick={() => {
                                     // getDetail(item.id);
-                                    setModal(idx);
+                                    setModal(item.id);
                                 }}
                             >
                                 <div className={"d-flex flex-column justify-content-between"}>
                                     <p className="mb-0">
-                                        {item.buyer_company_name},{" "}
-                                        {item.seller_company_name}
-                                    </p>
+                                        {item.from_company_name}
+                                        </p>
                                 </div>
                             </div>
                             <div
@@ -51,7 +49,12 @@ const Archive = () => {
                                     <p>Продовец: {item?.seller_company_name}</p>
                                     <p>
                                         <a href={item?.inner_traid} className="mb-2">
-                                            Cкачать файл
+                                            Cкачать внутренний трайд
+                                        </a>
+                                    </p>
+                                    <p>
+                                        <a href={item?.traid} className="mb-2">
+                                            Cкачать трайд
                                         </a>
                                     </p>
                                     <div className="d-flex justify-content-between">
@@ -62,7 +65,7 @@ const Archive = () => {
                                     </div>
                                 </div>
                             </div>
-                        </>
+                        </div>
                     )
                 })
             }

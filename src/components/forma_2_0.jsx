@@ -1,37 +1,18 @@
 import React, {useEffect, useState} from 'react';
-import { useNavigate } from 'react-router-dom';
+import {currency} from "./Request";
+import {useNavigate} from "react-router-dom";
 import axiosSSR from "../axios";
-import CustomSelect from "./CustomSelect";
 
-export const currency = [
-    {
-        title: "USD",
-        meaning: "USD",
-    }, {
-        title: "EURO",
-        meaning: "EURO",
-    }, {
-        title: "RUB",
-        meaning: "RUB",
-    }, {
-        title: "CNY",
-        meaning: "CNY",
-    }, {
-        title: "SOM",
-        meaning: "KG",
-    }
-]
-
-const Request = () => {
+const Forma20 = (props) => {
     const navigate = useNavigate()
     const [requestState, setRequestState] = useState({
-        currency: "",
-        price: 0,
-        product_or_service: "",
-        sell_or_buy: "",
+        currency: props.content.currency,
+        price: props.content.price,
+        product_or_service: props.content.product_or_service,
+        sell_or_buy: props.content.sell_or_buy,
         status_gen: false,
-        date: "",
-        deal_number: 0,
+        date: props.content.date,
+        deal_number: props.content.deal_number,
         mode: "",
         client_course: 0.00,
         outgoing_currency: "",
@@ -39,9 +20,9 @@ const Request = () => {
         outgoing_amount: 0,
         to_company: 0,
         bank: 0,
-        from_company: 0,
-        counterparty_bank: "",
-        product_category: "",
+        from_company: props.content.from_company,
+        counterparty_bank: props.content.counterparty_bank ? props.content.counterparty_bank : "",
+        product_category: props.content.product_category,
         product: ""
     })
     const [companies, setCompanies] = useState([])
@@ -105,85 +86,36 @@ const Request = () => {
             counterparty_bank: requestState.counterparty_bank,
             product_category: requestState.product_category,
             product: requestState.product,
+            from_client: false,
             status: "Todo"
         }
-        await axiosSSR.post("/api/request/", data).then(res => {
-            setRequestState({
-                currency: "",
-                price: 0,
-                product_or_service: "",
-                sell_or_buy: "",
-                status: true,
-                date: "",
-                deal_number: 0,
-                mode: "",
-                client_course: 0,
-                outgoing_currency: "",
-                internal_course: 0,
-                outgoing_amount: 0,
-                to_company: 0,
-                bank: 0,
-                from_company: 0,
-                counterparty_bank: "",
-                product_category: "",
-                product: ""
-            })
+        await axiosSSR.patch(`/api/request/${props.content.id}/`, data).then(res => {
             if(res?.error?.statusCode === 400){
                 setError(true)
                 return res
             }
             setAl(true)
-            setDocx(res.data)
+            props.setModal(null)
+            props.getOrder()
             return res
         })
     }
+
     const clearState = (e) => {
         e.preventDefault()
-        setRequestState({
-            currency: "",
-            price: 0,
-            product_or_service: "",
-            sell_or_buy: "",
-            status: true,
-            date: "",
-            deal_number: 0,
-            mode: "",
-            client_course: 0,
-            outgoing_currency: "",
-            internal_course: 0,
-            outgoing_amount: 0,
-            to_company: 0,
-            bank: 0,
-            from_company: 0,
-            counterparty_bank: "",
-            product_category: "",
-            product: ""
-        })
+        props.setModal(null)
     }
+
     useEffect(() => {
         setRequestState(prevState => ({
             ...prevState,
-            price: requestState.outgoing_amount * requestState.client_course
+            outgoing_amount: requestState.price * requestState.client_course
         }))
-    }, [requestState.outgoing_amount, requestState.client_course])
-
-    function selectCompanyClick(item) {
-        setRequestState(prevState => ({
-            ...prevState,
-            from_company: item.id
-        }))
-    }
-
-    function toCompanyFunc(item) {
-        setRequestState(prevState => ({
-            ...prevState,
-            to_company: item.id
-        }))
-    }
+    }, [requestState.price, requestState.client_course])
 
     return (
         <>
-            <form onSubmit={handlerClick}>
+            <div>
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Валюта:</p>
                     <div className="col-8">
@@ -273,13 +205,22 @@ const Request = () => {
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Входящая сумму:</p>
                     <div className="col-8">
-                        <input type="number" className="form-control" min="0" name="price" value={requestState.price} onChange={handlerChange} required/>
+                        <input type="text" className="form-control" name="price" value={requestState.price} onChange={handlerChange}/>
                     </div>
                 </div>
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Наша компания:</p>
                     <div className="col-8">
-                        <CustomSelect selectCompanyClick={toCompanyFunc} />
+                        <select className="form-select" aria-label="Default select example" name="to_company" value={requestState.to_company} onChange={handlerChange} required>
+                            <option defaultValue>...</option>
+                            {
+                                companies?.map((item, idx) => (
+                                    <option value={item.id} key={idx}>
+                                        {item.company_short_name_en}
+                                    </option>
+                                ))
+                            }
+                        </select>
                     </div>
                 </div>
                 <div className="row mt-3 align-items-center">
@@ -298,7 +239,16 @@ const Request = () => {
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Компания контрагента:</p>
                     <div className="col-8">
-                        <CustomSelect selectCompanyClick={selectCompanyClick} />
+                        <select className="form-select" aria-label="Default select example" name="from_company" value={requestState.from_company} onChange={handlerChange} required>
+                            <option defaultValue>...</option>
+                            {
+                                companies?.map((item, idx) => (
+                                    <option value={item.id} key={idx}>
+                                        {item.company_short_name_en}
+                                    </option>
+                                ))
+                            }
+                        </select>
                     </div>
                 </div>
                 <div className="row mt-3 align-items-center">
@@ -345,17 +295,13 @@ const Request = () => {
                     </div>
                 </div>
                 <div className='d-flex justify-content-between mb-5 mt-3 align-items-center'>
+                    <div/>
                     <div>
-                        {
-                            docx ? <a href={docx.traid} download>Скачать документ</a> : null
-                        }
-                    </div>
-                    <div>
-                        <button className="btn btn-danger me-3" onClick={clearState}>Сбросить</button>
-                        <button className="btn btn-primary" type="submit">Отправить</button>
+                        <button className="btn btn-danger me-3" onClick={clearState}>Отменить</button>
+                        <button className="btn btn-primary" onClick={handlerClick}>Принять заявку</button>
                     </div>
                 </div>
-            </form>
+            </div>
             <div className={al ? "alert-custom" : "alert-custom hidden"}>
                 <div className="alert alert-success d-flex align-items-center">
                     <i className="bi bi-exclamation-circle flex-shrink-0 me-2"/>
@@ -375,7 +321,7 @@ const Request = () => {
                 </div>
             </div>
         </>
-    )
+    );
 };
 
-export default Request;
+export default Forma20;

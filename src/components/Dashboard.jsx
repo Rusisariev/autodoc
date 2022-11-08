@@ -7,6 +7,10 @@ const Dashboard = () => {
     const [superUser, setSuperUser] = useState(false);
     const [modal, setModal] = useState(false);
     const [details, setDetails] = useState(0);
+    const [curs, setCurs] = useState({
+        internal_course: "",
+        client_course: ""
+    })
 
     const patchDashboard = async (id, status) => {
         await axiosSSR.patch(`/api/inner_traids_dashboard/${id}/`, {
@@ -49,6 +53,32 @@ const Dashboard = () => {
         }
     }, []);
 
+    const sendArchive = async (id) => {
+        const data = {
+            is_draft: true
+        }
+        await axiosSSR.patch(`/api/request/${id}`, data)
+    }
+
+    function handlerChange(e) {
+        const {name, value} = e.target
+        setCurs(prevState => ({
+            ...prevState,
+            [name]: value
+        }))
+    }
+
+    async function handlerClick(id) {
+        const data = {
+            internal_course: curs.internal_course,
+            client_course: curs.client_course
+        }
+        await axiosSSR.patch(`api/request/${id}/`, data).then(res => {
+            setModal(false)
+            return res
+        })
+    }
+
     return (
         <div className="dashboard">
             <div className="dashboard-item bg-warning">
@@ -64,6 +94,7 @@ const Dashboard = () => {
                                 getDetail(item.id);
                                 setModal(true);
                             }}
+                            style={item.internal_course || item.client_course ? {} : {background: "#ff0"}}
                         >
                             <div className={item.urgent ? "text-white d-flex flex-column justify-content-between" : "d-flex flex-column justify-content-between"}>
                                 <p className="mb-0">
@@ -98,13 +129,22 @@ const Dashboard = () => {
                                     </div>
                                     <div className="mt-2">
                                         <button
-                                            className={!item.urgent ? "btn btn-danger" : "btn btn-primary"}
+                                            className={!item.urgent ? "btn btn-danger me-2" : "btn btn-primary me-2"}
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 patchStatusUrgent(item.id, item.urgent);
                                             }}
                                         >
                                             В спешке
+                                        </button>
+                                        <button
+                                            className="btn btn-secondary me-2"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                sendArchive(item.id);
+                                            }}
+                                        >
+                                            В архив
                                         </button>
                                     </div>
                                 </div>
@@ -125,6 +165,7 @@ const Dashboard = () => {
                                 getDetail(item.id);
                                 setModal(true);
                             }}
+                            style={item.internal_course || item.client_course ? {} : {background: "#ff0"}}
                         >
                             <div className={item.urgent ? "text-white d-flex flex-column justify-content-between" : "d-flex flex-column justify-content-between"}>
                                 <p className="mb-0">
@@ -154,15 +195,24 @@ const Dashboard = () => {
                                             В готово
                                         </button>
                                     </div>
-                                    <div className="mt-2">
+                                    <div className="mt-2 d-flex">
                                         <button
-                                            className={!item.urgent ? "btn btn-danger" : "btn btn-primary"}
+                                            className={!item.urgent ? "btn btn-danger me-2" : "btn btn-primary me-2"}
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 patchStatusUrgent(item.id, item.urgent);
                                             }}
                                         >
                                             В спешке
+                                        </button>
+                                        <button
+                                            className="btn btn-secondary me-2"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                sendArchive(item.id);
+                                            }}
+                                        >
+                                            В архив
                                         </button>
                                     </div>
                                 </div>
@@ -183,6 +233,7 @@ const Dashboard = () => {
                                 getDetail(item.id);
                                 setModal(true);
                             }}
+                            style={item.internal_course || item.client_course ? {} : {background: "#ff0"}}
                         >
                             <div className={item.urgent ? "text-white d-flex flex-column justify-content-between" : "d-flex flex-column justify-content-between"}>
                                 <p className="mb-0">
@@ -191,28 +242,41 @@ const Dashboard = () => {
                                 </p>
                             </div>
                             {superUser ? (
-                                <div className="d-flex mt-2">
-                                    <button
-                                        className="btn btn-primary me-2"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            patchDashboard(item.id, "Todo");
-                                        }}
-                                    >
-                                        К выполнению
-                                    </button>
-                                    <button
-                                        className="btn btn-primary me-2"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            patchDashboard(
-                                                item.id,
-                                                "In progress"
-                                            );
-                                        }}
-                                    >
-                                        В процессе
-                                    </button>
+                                <div>
+                                    <div className="d-flex mt-2">
+                                        <button
+                                            className="btn btn-primary me-2"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                patchDashboard(item.id, "Todo");
+                                            }}
+                                        >
+                                            К выполнению
+                                        </button>
+                                        <button
+                                            className="btn btn-primary me-2"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                patchDashboard(
+                                                    item.id,
+                                                    "In progress"
+                                                );
+                                            }}
+                                        >
+                                            В процессе
+                                        </button>
+                                    </div>
+                                    <div className="d-flex mt-2">
+                                        <button
+                                            className="btn btn-secondary me-2"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                sendArchive(item.id);
+                                            }}
+                                        >
+                                            В архив
+                                        </button>
+                                    </div>
                                 </div>
                             ) : null}
                         </div>
@@ -232,9 +296,31 @@ const Dashboard = () => {
                     <p>Продовец: {details?.seller_company_name}</p>
                     <p>
                         <a href={details?.inner_traid} className="mb-2">
-                            Cкачать файл
+                            Cкачать внутренний трайд
                         </a>
                     </p>
+                    <p>
+                        <a href={details?.traid} className="mb-2">
+                            Cкачать трайд
+                        </a>
+                    </p>
+                    <div className="send-curs mb-3">
+                        <div className="row mt-3 align-items-center">
+                            <p className="mb-0 col-4">Клиентский курс:</p>
+                            <div className="col-8">
+                                <input type="number" step="0.01" className="form-control" name="client_course" value={curs.client_course} onChange={handlerChange} />
+                            </div>
+                        </div>
+                        <div className="row mt-3 align-items-center">
+                            <p className="mb-0 col-4">Внутренний курс:</p>
+                            <div className="col-8">
+                                <input type="number" step="0.01" className="form-control" name="internal_course" value={curs.internal_course} onChange={handlerChange} />
+                            </div>
+                        </div>
+                        <div className="d-flex justify-content-end align-items-center mt-2">
+                            <button className="btn btn-primary" onClick={() => handlerClick(details?.id)}>Изменить</button>
+                        </div>
+                    </div>
                     <div className="d-flex justify-content-between">
                         <p className="mb-0">
                             Сумма: {details?.price}
