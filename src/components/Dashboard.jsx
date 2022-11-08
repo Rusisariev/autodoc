@@ -79,6 +79,13 @@ const Dashboard = () => {
         })
     }
 
+    async function sendFile(id) {
+        await axiosSSR.patch(`api/request/${id}/`, {status_gen: true}).then(res => {
+            getDetail(id)
+            return res
+        })
+    }
+
     return (
         <div className="dashboard">
             <div className="dashboard-item bg-warning">
@@ -304,6 +311,9 @@ const Dashboard = () => {
                             Cкачать трайд
                         </a>
                     </p>
+                    <div className="mb-2">
+                        <button className="btn btn-primary" onClick={() => sendFile(details?.id)}>Сгенерировать файлы</button>
+                    </div>
                     <div className="send-curs mb-3">
                         <div className="row mt-3 align-items-center">
                             <p className="mb-0 col-4">Клиентский курс:</p>
