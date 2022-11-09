@@ -57,7 +57,7 @@ const Dashboard = () => {
         const data = {
             is_draft: true
         }
-        await axiosSSR.patch(`/api/request/${id}`, data)
+        await axiosSSR.patch(`/api/request/${id}/`, data).then(() => getDashboard())
     }
 
     function handlerChange(e) {
