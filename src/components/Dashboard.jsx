@@ -73,14 +73,14 @@ const Dashboard = () => {
             internal_course: curs.internal_course,
             client_course: curs.client_course
         }
-        await axiosSSR.patch(`api/request/${id}/`, data).then(res => {
+        await axiosSSR.patch(`/api/request/${id}/`, data).then(res => {
             setModal(false)
             return res
         })
     }
 
     async function sendFile(id) {
-        await axiosSSR.patch(`api/request/${id}/`, {status_gen: true}).then(res => {
+        await axiosSSR.patch(`/api/request/${id}/`, {status_gen: true}).then(res => {
             getDetail(id)
             return res
         })
