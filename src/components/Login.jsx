@@ -9,6 +9,7 @@ const Login = () => {
         password: ""
     });
     const [passwordHidden, setPasswordHidden] = useState(false)
+    const [error, setError] = useState(null)
 
     const handlerChange = (e) => {
         const {name, value} = e.target
@@ -38,8 +39,11 @@ const Login = () => {
                 username: "",
                 password: ""
             })
-            navigate('/profile')
-        }).catch(e => console.error(e))
+            // navigate('/profile')
+        }).catch(e => {
+            console.log(e)
+            setError(e)
+        })
     }
 
     const hidden = (e) => {
@@ -53,10 +57,15 @@ const Login = () => {
                 <div className="form-sign-in m-auto">
                     <form onSubmit={handleSubmit}>
                         <h1 className="h3 mb-3 fw-normal text-white text-center">Авторизация</h1>
+                        {
+                            error ? (
+                                <p className="text-danger">Неправильное имя пользователя или же пароль!</p>
+                            ) : null
+                        }
                         <div className="form-floating mb-3">
                             <input
                                 type="text"
-                                className="form-control"
+                                className={error ? "form-control is-invalid" : "form-control"}
                                 id="floatingUsername"
                                 name="username"
                                 autoComplete="username"
@@ -70,17 +79,26 @@ const Login = () => {
                             <div className="form-floating">
                                 <input
                                     type={passwordHidden ? "text" : "password"}
-                                    className="form-control"
+                                    className={error ? "form-control is-invalid" : "form-control"}
                                     id="floatingPassword"
                                     placeholder="Password"
                                     name="password"
                                     value={singIn.password}
                                     onChange={handlerChange}
                                     autoComplete="current-password"
+                                    style={{borderRight: "1px solid transparent"}}
                                 />
                                 <label htmlFor="floatingPassword">Пароль</label>
                             </div>
-                            <div className="input-group-text btn btn-primary bg-light text-muted border-light d-flex justify-content-center align-items-center" onClick={hidden}>
+                            <div
+                                className={
+                                    error
+                                        ? "input-group-text btn btn-primary bg-light text-muted border-danger d-flex justify-content-center align-items-center"
+                                        : "input-group-text btn btn-primary bg-light text-muted border-light d-flex justify-content-center align-items-center"
+                                }
+                                onClick={hidden}
+                                style={{borderLeft: "1px solid transparent"}}
+                            >
                                 {
                                     !passwordHidden
                                         ? <i className="bi bi-eye-fill"/>
