@@ -350,7 +350,7 @@ const Dashboard = () => {
                     </div>
                     <div className="d-flex justify-content-between">
                         <p className="mb-0">
-                            Сумма: {details?.price}
+                            Сумма: {details?.outgoing_amount}
                         </p>
                         <p className="mb-0">{details?.date}</p>
                     </div>

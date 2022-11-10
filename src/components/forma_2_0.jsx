@@ -7,7 +7,7 @@ const Forma20 = (props) => {
     const navigate = useNavigate()
     const [requestState, setRequestState] = useState({
         currency: props.content.currency,
-        price: props.content.price,
+        price: 0,
         product_or_service: props.content.product_or_service,
         sell_or_buy: props.content.sell_or_buy,
         status_gen: false,
@@ -17,7 +17,7 @@ const Forma20 = (props) => {
         client_course: 0.00,
         outgoing_currency: "",
         internal_course: 0.00,
-        outgoing_amount: 0,
+        outgoing_amount: props.content.outgoing_amount,
         to_company: 0,
         bank: 0,
         from_company: props.content.from_company,
