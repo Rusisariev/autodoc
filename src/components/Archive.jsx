@@ -1,19 +1,31 @@
 import React, {useEffect, useState} from 'react';
 import axiosSSR from "../axios";
+import {useSelector} from "react-redux";
+import {useNavigate} from "react-router-dom";
 
 const Archive = () => {
     const [archive, setArchive] = useState([])
     const [modal, setModal] = useState(null)
+    const userDetail = useSelector(state => state.user)
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if(userDetail.userDetail?.role === "Client") {
+            navigate("/profile")
+        }
+    }, [userDetail.userDetail])
 
     const getArchive = async () => {
         const res = await axiosSSR.get("/api/request/?is_draft=true")
         setArchive(res.data)
     }
 
-    console.log(archive)
-
     useEffect(() => {
-        getArchive().then(res => res)
+        if(!window.localStorage.getItem("token")){
+            navigate("/")
+        }else{
+            getArchive().then(res => res)
+        }
     }, [])
 
     return (

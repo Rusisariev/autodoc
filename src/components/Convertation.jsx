@@ -3,6 +3,7 @@ import {currency} from "./Request";
 import axiosSSR from "../axios";
 import { useNavigate } from 'react-router-dom';
 import CustomSelect from "./CustomSelect";
+import {useSelector} from "react-redux";
 
 const Convertation = () => {
     const navigate = useNavigate()
@@ -24,6 +25,7 @@ const Convertation = () => {
     const [al, setAl] = useState(false)
     const [error, setError] = useState(false)
     // const [innerTraids, setInnerTraids] = useState([])
+    const userDetail = useSelector(state => state.user)
     
     useEffect(() => {
         setConvertationState(prevState => ({
@@ -63,6 +65,12 @@ const Convertation = () => {
     //     const res = await axiosSSR.get("/api/inner_traids/")
     //     setInnerTraids(res.data)
     // }
+
+    useEffect(() => {
+        if(userDetail.userDetail?.role === "Client") {
+            navigate("/profile")
+        }
+    }, [userDetail.userDetail])
 
     useEffect(() => {
         if(!window.localStorage.getItem("token")){

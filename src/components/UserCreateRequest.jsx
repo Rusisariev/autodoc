@@ -1,6 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import axiosSSR from "../axios";
 import {currency} from "./Request";
+import CustomSelect from "./CustomSelect";
+import {useDispatch, useSelector} from "react-redux";
+import {getUser} from "../redux/users/action";
 
 const UserCreateRequest = () => {
     const [categories, setCategories] = useState([])
@@ -27,6 +30,8 @@ const UserCreateRequest = () => {
         stamp: "",
         bank_requisites_text: ""
     })
+    const user = useSelector(state => state.user)
+    const dispatch = useDispatch()
 
     const handlerChange = (e) => {
         const {name, value} = e.target
@@ -47,15 +52,13 @@ const UserCreateRequest = () => {
         setCategories(res.data)
     }
 
-    const getCompanies = async () => {
-        const res = await axiosSSR.get("/api/companies/")
-        setCompanies(res.data)
-    }
+    // const getCompanies = () => {
+    //     setCompanies(user.userDetail?.companies)
+    // }
 
     useEffect(() => {
         getCategories()
         getProducts()
-        getCompanies()
     }, [])
 
     const clearState = () => {
@@ -73,7 +76,7 @@ const UserCreateRequest = () => {
 
     const handlerClick = async () => {
         const data = {
-            price: userCreateRequest.price,
+            outgoing_amount: userCreateRequest.price,
             product_or_service: userCreateRequest.category,
             date: userCreateRequest.date,
             product_category: userCreateRequest.product_category,
@@ -132,9 +135,9 @@ const UserCreateRequest = () => {
 
         data.append("name", newUserCompany.name)
         data.append("director_name", newUserCompany.director_name)
-        data.append("bank_requisites", newUserCompany.bank_requisites ? newUserCompany.bank_requisites : null)
-        data.append("signature", newUserCompany.signature ? newUserCompany.signature : null)
-        data.append("stamp", newUserCompany.stamp ? newUserCompany.stamp : null)
+        if(newUserCompany.bank_requisites) data.append("bank_requisites", newUserCompany.bank_requisites)
+        if(newUserCompany.signature) data.append("signature", newUserCompany.signature)
+        if(newUserCompany.stamp) data.append("stamp", newUserCompany.stamp)
         data.append("bank_requisites_text", newUserCompany.bank_requisites_text)
 
         await axiosSSR.post("/api/new_user_company/", data).then(res => {
@@ -149,7 +152,15 @@ const UserCreateRequest = () => {
                 })
             }
         })
+        dispatch(getUser())
     }
+
+    // function toCompanyFunc(item) {
+    //     setUserCreateRequest(prevState => ({
+    //         ...prevState,
+    //         from_company: item.id
+    //     }))
+    // }
 
     return (
         <div className="user-create-request">
@@ -203,7 +214,7 @@ const UserCreateRequest = () => {
                             <select className="form-select" aria-label="Default select example" name="from_company" value={userCreateRequest.from_company} onChange={handlerChange} required>
                                 <option defaultValue>...</option>
                                 {
-                                    companies?.map((item, idx) => (
+                                    user.userDetail?.companies?.map((item, idx) => (
                                         <option value={item.id} key={idx}>
                                             {item.company_short_name_en}
                                         </option>
@@ -223,7 +234,7 @@ const UserCreateRequest = () => {
                     <select className="form-select" aria-label="Default select example" name="counterparty_bank" value={userCreateRequest.counterparty_bank} onChange={handlerChange} required>
                         <option defaultValue>...</option>
                         {
-                            companies?.find(el => el.id === Number(userCreateRequest.from_company))?.banks?.map((item, idx) => (
+                            user.userDetail?.companies?.find(el => el.id === Number(userCreateRequest.from_company))?.banks?.map((item, idx) => (
                                 <option key={idx} value={item.id}>{item.company_bank_name_en}</option>
                             ))
                         }
@@ -297,20 +308,20 @@ const UserCreateRequest = () => {
                     <div className="row mt-3 align-items-center">
                         <p className="mb-0 col-4">Подпись:</p>
                         <div className="col-8">
-                            <input type="file" name="signature" accept=".docx" className="form-control"  onChange={handlerChangeNewUserCompanyFile} />
+                            <input type="file" name="signature" className="form-control"  onChange={handlerChangeNewUserCompanyFile} />
                         </div>
                     </div>
                     <div className="row mt-3 align-items-center">
                         <p className="mb-0 col-4">Печать:</p>
                         <div className="col-8">
-                            <input type="file" name="stamp" accept=".docx" className="form-control"  onChange={handlerChangeNewUserCompanyFile} />
+                            <input type="file" name="stamp" className="form-control"  onChange={handlerChangeNewUserCompanyFile} />
                         </div>
                     </div>
                     <p className="text-danger mt-2 mb-2">одно из этих полей обезательно к заполнению!</p>
                     <div className="row mt-3 align-items-center">
                         <p className="mb-0 col-4">Банковские реквизиты:</p>
                         <div className="col-8">
-                            <input type="file" name="bank_requisites" accept=".docx" className="form-control"  onChange={handlerChangeNewUserCompanyFile} />
+                            <input type="file" name="bank_requisites" className="form-control"  onChange={handlerChangeNewUserCompanyFile} />
                         </div>
                     </div>
                     <div className="row mt-3 align-items-center">

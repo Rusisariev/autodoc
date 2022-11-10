@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosSSR from "../axios";
 import { currency } from "./Request";
+import {useSelector} from "react-redux";
 
 const InnerTraids = () => {
     const navigate = useNavigate()
@@ -25,6 +26,7 @@ const InnerTraids = () => {
     const [docx, setDocx] = useState(false)
     const [products, setProducts] = useState([])
     const [categories, setCategories] = useState([])
+    const userDetail = useSelector(state => state.user)
 
     const getCompanies = async () => {
         const res = await axiosSSR.get("/api/companies/")
@@ -40,6 +42,12 @@ const InnerTraids = () => {
         const res = await axiosSSR.get("/api/categories/")
         setCategories(res.data)
     }
+
+    useEffect(() => {
+        if(userDetail.userDetail?.role === "Client") {
+            navigate("/profile")
+        }
+    }, [userDetail.userDetail])
 
     useEffect(() => {
         if(!window.localStorage.getItem("token")){

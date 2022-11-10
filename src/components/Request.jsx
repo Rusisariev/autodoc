@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosSSR from "../axios";
 import CustomSelect from "./CustomSelect";
+import {useSelector} from "react-redux";
 
 export const currency = [
     {
@@ -50,6 +51,7 @@ const Request = () => {
     const [error, setError] = useState(false)
     const [docx, setDocx] = useState(false)
     const [products2, setProducts2] = useState([])
+    const userDetail = useSelector(state => state.user)
 
     const handlerChange = (e) => {
         const {name, value} = e.target
@@ -73,6 +75,12 @@ const Request = () => {
         const res = await axiosSSR.get("/api/products/")
         setProducts2(res.data)
     }
+
+    useEffect(() => {
+        if(userDetail.userDetail?.role === "Client") {
+            navigate("/profile")
+        }
+    }, [userDetail.userDetail])
 
     useEffect(() => {
         if(!window.localStorage.getItem("token")){

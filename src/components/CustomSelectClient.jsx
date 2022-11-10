@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import axiosSSR from "../axios";
 
-const CustomSelect = ({selectCompanyClick}) => {
+const CustomSelectClient = ({selectCompanyClick}) => {
     const [searchValue, setSearchValue] = useState("")
     const [state, setState] = useState(false)
     const [searchCompany, setSearchCompany] = useState([])
@@ -43,4 +43,4 @@ const CustomSelect = ({selectCompanyClick}) => {
     );
 };
 
-export default CustomSelect;
+export default CustomSelectClient;

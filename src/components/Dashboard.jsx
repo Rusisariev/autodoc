@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import axiosSSR from "../axios";
+import {useNavigate} from "react-router";
+import {useSelector} from "react-redux";
 
 const Dashboard = () => {
     const [dashboard, setDashboard] = useState([]);
@@ -11,6 +13,8 @@ const Dashboard = () => {
         internal_course: "",
         client_course: ""
     })
+    const navigate = useNavigate()
+    const userDetail = useSelector(state => state.user)
 
     const patchDashboard = async (id, status) => {
         await axiosSSR.patch(`/api/inner_traids_dashboard/${id}/`, {
@@ -44,11 +48,23 @@ const Dashboard = () => {
     const getDetail = async (id) => {
         const res = await axiosSSR.get(`/api/inner_traids_dashboard/${id}`);
         setDetails(res.data);
+        setCurs({
+            internal_course: res.data.internal_course,
+            client_course: res.data?.client_course
+        })
     };
 
     useEffect(() => {
-        getDashboard();
-        if (window.localStorage.getItem("token")) {
+        if(userDetail.userDetail?.role === "Client") {
+            navigate("/profile")
+        }
+    }, [userDetail.userDetail])
+
+    useEffect(() => {
+        if(!window.localStorage.getItem("token")){
+            navigate("/")
+        }else {
+            getDashboard();
             getUser();
         }
     }, []);
@@ -71,7 +87,8 @@ const Dashboard = () => {
     async function handlerClick(id) {
         const data = {
             internal_course: curs.internal_course,
-            client_course: curs.client_course
+            client_course: curs.client_course,
+            price: curs.client_course * details?.outgoing_amount
         }
         await axiosSSR.patch(`/api/request/${id}/`, data).then(res => {
             setModal(false)

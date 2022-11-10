@@ -80,13 +80,13 @@ const Login = () => {
                                 />
                                 <label htmlFor="floatingPassword">Пароль</label>
                             </div>
-                            <button className="input-group-text btn btn-primary bg-light text-muted border-light" onClick={hidden}>
+                            <div className="input-group-text btn btn-primary bg-light text-muted border-light d-flex justify-content-center align-items-center" onClick={hidden}>
                                 {
                                     !passwordHidden
                                         ? <i className="bi bi-eye-fill"/>
                                         : <i className="bi bi-eye-slash-fill"/>
                                 }
-                            </button>
+                            </div>
                         </div>
                         <button className="w-100 btn btn-lg btn-primary" type="submit">Войти</button>
                     </form>

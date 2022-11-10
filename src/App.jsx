@@ -16,18 +16,11 @@ import Order from "./components/Order";
 
 const App = () => {
     const location = useLocation()
-    const dispatch = useDispatch()
-
-    useEffect(() => {
-        dispatch(getUser())
-    }, [])
 
     return (
         <>
             {
-                location.pathname !== "/" ? <Navbar /> : <div className="d-flex justify-content-end container position-absolute mt-3">
-                    <Link to="/dashboard" className={location.pathname === "/dashboard" ? "nav-link active" : "nav-link"}>Доска</Link>
-                </div>
+                location.pathname !== "/" ? <Navbar /> : null
             }
             <div className="container">
                 <Routes>

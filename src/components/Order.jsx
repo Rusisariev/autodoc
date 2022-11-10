@@ -1,10 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import axiosSSR from "../axios";
 import Forma20 from "./forma_2_0";
+import {useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {getUser} from "../redux/users/action";
 
 const Order = () => {
     const [order, setOrder] = useState([])
     const [modal, setModal] = useState(null)
+    const navigate = useNavigate()
+    const userDetail = useSelector(state => state.user)
 
     const getArchive = async () => {
         const res = await axiosSSR.get("/api/request/?from_client=true")
@@ -12,8 +17,19 @@ const Order = () => {
     }
 
     useEffect(() => {
-        getArchive().then(res => res)
+        if(userDetail.userDetail?.role === "Client") {
+            navigate("/profile")
+        }
+    }, [userDetail.userDetail])
+
+    useEffect(() => {
+        if(!window.localStorage.getItem("token")){
+            navigate("/")
+        }else{
+            getArchive().then(res => res)
+        }
     }, [])
+
     return (
         <div className="dashboard">
             {

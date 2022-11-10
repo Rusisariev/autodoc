@@ -1,21 +1,26 @@
 import React, {useEffect, useState} from 'react';
 import {Link, useLocation} from "react-router-dom";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {getUser} from "../redux/users/action";
 
 const Navbar = () => {
     const [show, setShow] = useState(false)
     const location = useLocation()
     const user = useSelector(state => state.user)
     const [links, setLinks] = useState("")
-    // const dispatch = useDispatch()
+    const dispatch = useDispatch()
 
-    function showMobileNav() {
-        setShow(!show)
-    }
+    useEffect(() => {
+        dispatch(getUser())
+    }, [])
 
     useEffect(() => {
         setLinks(user.userDetail?.role)
     }, [user.userDetail])
+
+    function showMobileNav() {
+        setShow(!show)
+    }
 
     return (
         <div className="navbar navbar-expand-lg navbar-light bg-light">
