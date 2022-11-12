@@ -39,7 +39,7 @@ const Login = () => {
                 username: "",
                 password: ""
             })
-            // navigate('/profile')
+            navigate('/profile')
         }).catch(e => {
             console.log(e)
             setError(e)
