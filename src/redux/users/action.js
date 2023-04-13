@@ -1,7 +1,6 @@
 import {GET_USER_SUCCESS} from "./index";
 import axiosSSR from "../../axios";
 
-
 const getUserSuccess = (payload) => ({type: GET_USER_SUCCESS, payload})
 const getUserError = (payload) => ({type: GET_USER_SUCCESS, payload})
 const getUserLoading = () => ({type: GET_USER_SUCCESS})

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axiosSSR from "../axios";
 import CustomSelect from "./CustomSelect";
 import {useSelector} from "react-redux";
+import Select from "./UI/Select";
 
 export const currency = [
     {
@@ -23,9 +24,43 @@ export const currency = [
     }
 ]
 
+export const banks = [
+    {
+        meaning: "RSK",
+        title: "РСК банк",
+    }, {
+        meaning: "BAKAI",
+        title: "Бакай банк",
+    }, {
+        meaning: "ESB",
+        title: "ЕСБ банк",
+    }, {
+        meaning: "AIL",
+        title: "Айыл банк",
+    }, {
+        meaning: "KEREMET",
+        title: "Керемет банк",
+    }
+]
+
+export const transactionTypes = [
+    {
+        meaning: "CASHED_OUT",
+        title: "Cashed out",
+    }, {
+        meaning: "TRANSIT",
+        title: "Transit",
+    }, {
+        meaning: "TRANSIT_CONVERTATION",
+        title: "Transit-convertation",
+    }
+]
+
 const Request = () => {
     const navigate = useNavigate()
     const [requestState, setRequestState] = useState({
+        user: "",
+        bank_name: "",
         currency: "",
         price: 0,
         product_or_service: "",
@@ -86,9 +121,9 @@ const Request = () => {
         if(!window.localStorage.getItem("token")){
             navigate("/")
         }else{
-            getCompanies()
-            getProducts()
-            getProducts2()
+            getCompanies().then(r => r)
+            getProducts().then(r => r)
+            getProducts2().then(r => r)
         }
     }, [])
 
@@ -113,7 +148,9 @@ const Request = () => {
             counterparty_bank: requestState.counterparty_bank,
             product_category: requestState.product_category,
             product: requestState.product,
-            status: "Todo"
+            status: "Todo",
+            user: requestState.user,
+            bank_name: requestState.bank_name,
         }
         await axiosSSR.post("/api/request/", data).then(res => {
             setRequestState({
@@ -134,7 +171,9 @@ const Request = () => {
                 from_company: 0,
                 counterparty_bank: "",
                 product_category: "",
-                product: ""
+                product: "",
+                user: "",
+                bank_name: "",
             })
             if(res?.error?.statusCode === 400){
                 setError(true)
@@ -192,51 +231,67 @@ const Request = () => {
     return (
         <>
             <form onSubmit={handlerClick}>
+                <Select
+                  value={requestState.bank_name}
+                  onChange={handlerChange}
+                  title={"Название банка:"}
+                  currency={banks}
+                  name={"bank_name"}
+                />
+
+                <Select
+                  currency={transactionTypes}
+                  name={"transaction_type"}
+                  value={requestState.transaction_type}
+                  onChange={handlerChange}
+                  title={"Тип операции:"}
+                />
+
+                <Select
+                  value={requestState.currency}
+                  onChange={handlerChange}
+                  title={"Валюта:"}
+                  currency={currency}
+                  name={"currency"}
+                />
+
+                <Select
+                  value={requestState.product_or_service}
+                  onChange={handlerChange}
+                  title={"Товар или услуга:"}
+                  currency={[{title: "Product", meaning: "Product"}, {title: "Service", meaning: "Service"}]}
+                  name={"product_or_service"}
+                />
+
+                <Select
+                  currency={[{title: "Sell", meaning: "Sell"}, {title: "Buy", meaning: "Buy"}]}
+                  title={"Продать или купить:"}
+                  onChange={handlerChange}
+                  value={requestState.sell_or_buy}
+                  name={"sell_or_buy"}
+                />
+
                 <div className="row mt-3 align-items-center">
-                    <p className="mb-0 col-4">Валюта:</p>
+                    <p className="mb-0 col-4">Пользователь:</p>
                     <div className="col-8">
-                        <select className="form-select" aria-label="Default select example" name="currency" value={requestState.currency} onChange={handlerChange} required>
-                            <option defaultValue>...</option>
-                            {
-                                currency.map((item, idx) => {
-                                    return <option value={item.meaning} key={idx}>{item.title}</option>
-                                })
-                            }
-                        </select>
+                        <input type="text" className="form-control" value={requestState.user} name="user" onChange={handlerChange} />
                     </div>
                 </div>
-                <div className="row mt-3 align-items-center">
-                    <p className="mb-0 col-4">Товар или услуга:</p>
-                    <div className="col-8">
-                        <select className="form-select" aria-label="Default select example" name="product_or_service" value={requestState.product_or_service} onChange={handlerChange} required>
-                            <option defaultValue>...</option>
-                            <option value="Product">Product</option>
-                            <option value="Service">Service</option>
-                        </select>
-                    </div>
-                </div>
-                <div className="row mt-3 align-items-center">
-                    <p className="mb-0 col-4">Продать или купить:</p>
-                    <div className="col-8">
-                        <select className="form-select" aria-label="Default select example" name="sell_or_buy" value={requestState.sell_or_buy} onChange={handlerChange} required>
-                            <option defaultValue>...</option>
-                            <option value="Sell">Sell</option>
-                            <option value="Buy">Buy</option>
-                        </select>
-                    </div>
-                </div>
+
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Дата:</p>
                     <div className="col-8">
                         <input type="date" className="form-control" value={requestState.date} name="date" onChange={handlerChange} />
                     </div>
                 </div>
+
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Номер сделки:</p>
                     <div className="col-8">
                         <input type="number" className="form-control" value={requestState.deal_number} name="deal_number" onChange={handlerChange} />
                     </div>
                 </div>
+
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Режим:</p>
                     <div className="col-8">
@@ -247,12 +302,14 @@ const Request = () => {
                         </select>
                     </div>
                 </div>
+
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Клиентский курс:</p>
                     <div className="col-8">
                         <input type="number" step="0.01" className="form-control" name="client_course" value={requestState.client_course} onChange={handlerChange} />
                     </div>
                 </div>
+
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Исходящая валюта:</p>
                     <div className="col-8">
@@ -266,30 +323,35 @@ const Request = () => {
                         </select>
                     </div>
                 </div>
+
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Внутренний курс:</p>
                     <div className="col-8">
                         <input type="number" step="0.01" className="form-control" name="internal_course" value={requestState.internal_course} onChange={handlerChange} />
                     </div>
                 </div>
+
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Исходящая сумма:</p>
                     <div className="col-8">
                         <input type="number" className="form-control" name="outgoing_amount" value={requestState.outgoing_amount} onChange={handlerChange} />
                     </div>
                 </div>
+
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Входящая сумму:</p>
                     <div className="col-8">
                         <input type="number" className="form-control" min="0" name="price" value={requestState.price} onChange={handlerChange} required/>
                     </div>
                 </div>
+
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Наша компания:</p>
                     <div className="col-8">
                         <CustomSelect selectCompanyClick={toCompanyFunc} />
                     </div>
                 </div>
+
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Банк нашей компании:</p>
                     <div className="col-8">
@@ -303,12 +365,14 @@ const Request = () => {
                         </select>
                     </div>
                 </div>
+
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Компания контрагента:</p>
                     <div className="col-8">
                         <CustomSelect selectCompanyClick={selectCompanyClick} />
                     </div>
                 </div>
+
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Банк контрагента:</p>
                     <div className="col-8">
@@ -322,6 +386,7 @@ const Request = () => {
                         </select>
                     </div>
                 </div>
+
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Категория продукта:</p>
                     <div className="col-8">
@@ -337,6 +402,7 @@ const Request = () => {
                         </select>
                     </div>
                 </div>
+
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Товар:</p>
                     <div className="col-8">
@@ -352,6 +418,7 @@ const Request = () => {
                         </select>
                     </div>
                 </div>
+
                 <div className='d-flex justify-content-between mb-5 mt-3 align-items-center'>
                     <div>
                         {
@@ -364,6 +431,7 @@ const Request = () => {
                     </div>
                 </div>
             </form>
+
             <div className={al ? "alert-custom" : "alert-custom hidden"}>
                 <div className="alert alert-success d-flex align-items-center">
                     <i className="bi bi-exclamation-circle flex-shrink-0 me-2"/>
@@ -373,6 +441,7 @@ const Request = () => {
                     <button type="button" className="btn-close ms-5" onClick={() => setAl(false)}/>
                 </div>
             </div>
+
             <div className={error ? "alert-custom" : "alert-custom hidden"}>
                 <div className="alert alert-danger d-flex align-items-center">
                     <i className="bi bi-exclamation-circle flex-shrink-0 me-2"/>

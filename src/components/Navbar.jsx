@@ -44,6 +44,8 @@ const Navbar = () => {
                                     <Link onClick={showMobileNav} to="/dashboard" className={location.pathname === "/dashboard" ? "nav-link active" : "nav-link"}>Доска</Link>
                                     <Link onClick={showMobileNav} to="/archive" className={location.pathname === "/archive" ? "nav-link active" : "nav-link"}>Архив</Link>
                                     <Link onClick={showMobileNav} to="/order" className={location.pathname === "/order" ? "nav-link active" : "nav-link"}>Заказы</Link>
+                                    <Link onClick={showMobileNav} to="/payment-order" className={location.pathname === "/payment-order" ? "nav-link active" : "nav-link"}>Платежное поручения</Link>
+                                    <Link onClick={showMobileNav} to="/report" className={location.pathname === "/report" ? "nav-link active" : "nav-link"}>Отчеты</Link>
                                 </>
                             )
                         }
