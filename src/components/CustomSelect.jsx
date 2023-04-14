@@ -12,7 +12,7 @@ const CustomSelect = ({selectCompanyClick}) => {
     }
 
     const getSearchCompany = async () => {
-        await axiosSSR.get(`/api/companies/?search=${searchValue.replace(/ /ig, '+')}`)
+        await axiosSSR.get(`/api/our_companies/?search=${searchValue.replace(/ /ig, '+')}`)
             .then(res => setSearchCompany(res.data))
     }
 

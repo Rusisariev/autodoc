@@ -10,7 +10,7 @@ const Report = () => {
     bank: "",
     user: ""
   })
-  const [success, setSuccess] = useState([])
+  const [success, setSuccess] = useState("")
 
   const handlerChange = (e) => {
     const {name, value} = e.target
@@ -24,10 +24,11 @@ const Report = () => {
       bank: "",
       user: ""
     })
+    setSuccess("")
   }
 
   const sendClick = async () => {
-    const res = await axiosSSR.get(`/api/report/`, {params: {
+    const res = await axiosSSR.get(`/api/report/get_report/`, {params: {
         date_from: state.date_from,
         date_to: state.date_to,
         bank: state.bank,
@@ -67,25 +68,12 @@ const Report = () => {
       />
       <div className='d-flex justify-content-between mb-5 mt-3 align-items-center'>
         <div>
-
+          {success ? <a href={success}>Скачать отчет</a> : null}
         </div>
         <div>
           <button className="btn btn-danger me-3" onClick={clearState}>Сбросить</button>
           <button className="btn btn-primary" onClick={sendClick}>Отправить</button>
         </div>
-      </div>
-      <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3">
-        {
-          success.map(item => (
-            <div key={item.id} className="col mb-3">
-              <div className="card p-2">
-                {item.id}
-                <a href={item.inner_traid} download>Скачать внутренний трайд</a>
-                <a href={item.traid} download>Скачать трайд</a>
-              </div>
-            </div>
-          ))
-        }
       </div>
     </div>
   );

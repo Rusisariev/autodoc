@@ -48,7 +48,7 @@ const PaymentOrder = () => {
     <div className="">
       <div className="row mt-3 align-items-center mb-3">
         <div className="col-5">
-          <input type="text" className="form-control" value={search} name="" onChange={handlerChangeSearch} />
+          <input type="text" className="form-control" placeholder={"Номер контракта"} value={search} name="" onChange={handlerChangeSearch} />
         </div>
         <div className="col-4">
           <input type="date" className="form-control" value={date} name="" onChange={handlerChangeDate} />
@@ -65,10 +65,10 @@ const PaymentOrder = () => {
           paymentOrders.map((item, idx) => (
             <div key={idx} className="col mb-3">
               <div className="card p-2">
-                <p>{item.contract_number}</p>
-                <p>{item.date}</p>
+                <p>Номер контракта: {item.contract_number}</p>
+                <p>Дата: {item.date}</p>
                 <a href={item.application} download>Скачать приложение</a>
-                <a href={item.payment_order} download>Скачать заказ</a>
+                <a href={item.payment_order} download>Скачать платежное поручение</a>
               </div>
             </div>
           ))

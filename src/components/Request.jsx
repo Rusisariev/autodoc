@@ -78,9 +78,11 @@ const Request = () => {
         from_company: 0,
         counterparty_bank: "",
         product_category: "",
-        product: ""
+        product: "",
+        transaction_type: ""
     })
     const [companies, setCompanies] = useState([])
+    const [user, setUser] = useState([])
     const [products, setProducts] = useState([])
     const [al, setAl] = useState(false)
     const [error, setError] = useState(false)
@@ -97,7 +99,7 @@ const Request = () => {
     }
 
     const getCompanies = async () => {
-        const res = await axiosSSR.get("/api/companies/")
+        const res = await axiosSSR.get("/api/our_companies/")
         setCompanies(res.data)
     }
 
@@ -109,6 +111,11 @@ const Request = () => {
     const getProducts2 = async () => {
         const res = await axiosSSR.get("/api/products/")
         setProducts2(res.data)
+    }
+
+    const getUsers = async () => {
+        const res = await axiosSSR.get("/api/companies/")
+        setUser(res.data)
     }
 
     useEffect(() => {
@@ -124,6 +131,7 @@ const Request = () => {
             getCompanies().then(r => r)
             getProducts().then(r => r)
             getProducts2().then(r => r)
+            getUsers().then(r => r)
         }
     }, [])
 
@@ -151,6 +159,7 @@ const Request = () => {
             status: "Todo",
             user: requestState.user,
             bank_name: requestState.bank_name,
+            transaction_type: requestState.transaction_type
         }
         await axiosSSR.post("/api/request/", data).then(res => {
             setRequestState({
@@ -174,6 +183,7 @@ const Request = () => {
                 product: "",
                 user: "",
                 bank_name: "",
+                transaction_type: "",
             })
             if(res?.error?.statusCode === 400){
                 setError(true)
@@ -204,7 +214,10 @@ const Request = () => {
             from_company: 0,
             counterparty_bank: "",
             product_category: "",
-            product: ""
+            product: "",
+            transaction_type: "",
+            user: "",
+            bank_name: ""
         })
     }
     useEffect(() => {
@@ -270,13 +283,6 @@ const Request = () => {
                   value={requestState.sell_or_buy}
                   name={"sell_or_buy"}
                 />
-
-                <div className="row mt-3 align-items-center">
-                    <p className="mb-0 col-4">Пользователь:</p>
-                    <div className="col-8">
-                        <input type="text" className="form-control" value={requestState.user} name="user" onChange={handlerChange} />
-                    </div>
-                </div>
 
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Дата:</p>
@@ -367,9 +373,30 @@ const Request = () => {
                 </div>
 
                 <div className="row mt-3 align-items-center">
+                    <p className="mb-0 col-4">Пользователь:</p>
+                    <div className="col-8">
+                        <select className="form-select" aria-label="Default select example" name="user" value={requestState.user} onChange={handlerChange} required>
+                            <option defaultValue>...</option>
+                            {
+                                user?.map((item, idx) => (
+                                  <option key={idx} value={item.id}>{item.username}</option>
+                                ))
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Компания контрагента:</p>
                     <div className="col-8">
-                        <CustomSelect selectCompanyClick={selectCompanyClick} />
+                        <select className="form-select" aria-label="Default select example" name="from_company" value={requestState.from_company} onChange={handlerChange} required>
+                            <option defaultValue>...</option>
+                            {
+                                user?.find(el => el.id === Number(requestState.user))?.companies?.map((item, idx) => (
+                                  <option key={idx} value={item.id}>{item.company_full_name_ru}</option>
+                                ))
+                            }
+                        </select>
                     </div>
                 </div>
 
@@ -379,7 +406,7 @@ const Request = () => {
                         <select className="form-select" aria-label="Default select example" name="counterparty_bank" value={requestState.counterparty_bank} onChange={handlerChange} required>
                             <option defaultValue>...</option>
                             {
-                                companies?.find(el => el.id === Number(requestState.from_company))?.banks?.map((item, idx) => (
+                                user?.find(el => el.id === Number(requestState.user))?.companies?.find(el => el.id === Number(requestState.from_company))?.banks?.map((item, idx) => (
                                     <option key={idx} value={item.id}>{item.company_bank_name_en}</option>
                                 ))
                             }
