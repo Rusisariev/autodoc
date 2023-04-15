@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, {useEffect, useMemo, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 import axiosSSR from "../axios";
 import CustomSelect from "./CustomSelect";
 import {useSelector} from "react-redux";
@@ -26,32 +26,32 @@ export const currency = [
 
 export const banks = [
     {
-        meaning: "RSK",
+        meaning: "РСК банк",
         title: "РСК банк",
     }, {
-        meaning: "BAKAI",
+        meaning: "Бакай банк",
         title: "Бакай банк",
     }, {
-        meaning: "ESB",
+        meaning: "ЕСБ банк",
         title: "ЕСБ банк",
     }, {
-        meaning: "AIL",
+        meaning: "Айыл банк",
         title: "Айыл банк",
     }, {
-        meaning: "KEREMET",
+        meaning: "Керемет банк",
         title: "Керемет банк",
     }
 ]
 
 export const transactionTypes = [
     {
-        meaning: "CASHED_OUT",
+        meaning: "Cashed out",
         title: "Cashed out",
     }, {
-        meaning: "TRANSIT",
+        meaning: "Transit",
         title: "Transit",
     }, {
-        meaning: "TRANSIT_CONVERTATION",
+        meaning: "Transit-convertation",
         title: "Transit-convertation",
     }
 ]
@@ -88,7 +88,20 @@ const Request = () => {
     const [error, setError] = useState(false)
     const [docx, setDocx] = useState(false)
     const [products2, setProducts2] = useState([])
+    const [userSearchValue, setUserSearchValue] = useState("")
+    const [userSearch, setUserSearch] = useState(false)
+    const [fromCompanySearchValue, setFromCompanySearchValue] = useState("")
+    const [fromCompanySearch, setFromCompanySearch] = useState(false)
+
     const userDetail = useSelector(state => state.user)
+
+    const newUserArray = useMemo(() => {
+        return user.filter(el => el.username.toLowerCase().includes(userSearchValue.toLowerCase()))
+    }, [userSearchValue])
+
+    const newFromCompanyArray = useMemo(() => {
+        return user?.find(el => el.id === Number(requestState?.user?.id))?.companies.filter(el => el.company_full_name_ru.toLowerCase().includes(fromCompanySearchValue.toLowerCase()))
+    }, [fromCompanySearchValue])
 
     const handlerChange = (e) => {
         const {name, value} = e.target
@@ -119,15 +132,15 @@ const Request = () => {
     }
 
     useEffect(() => {
-        if(userDetail.userDetail?.role === "Client") {
+        if (userDetail.userDetail?.role === "Client") {
             navigate("/profile")
         }
     }, [userDetail.userDetail])
 
     useEffect(() => {
-        if(!window.localStorage.getItem("token")){
+        if (!window.localStorage.getItem("token")) {
             navigate("/")
-        }else{
+        } else {
             getCompanies().then(r => r)
             getProducts().then(r => r)
             getProducts2().then(r => r)
@@ -157,7 +170,7 @@ const Request = () => {
             product_category: requestState.product_category,
             product: requestState.product,
             status: "Todo",
-            user: requestState.user,
+            user: requestState.user.id,
             bank_name: requestState.bank_name,
             transaction_type: requestState.transaction_type
         }
@@ -185,7 +198,7 @@ const Request = () => {
                 bank_name: "",
                 transaction_type: "",
             })
-            if(res?.error?.statusCode === 400){
+            if (res?.error?.statusCode === 400) {
                 setError(true)
                 return res
             }
@@ -245,63 +258,68 @@ const Request = () => {
         <>
             <form onSubmit={handlerClick}>
                 <Select
-                  value={requestState.bank_name}
-                  onChange={handlerChange}
-                  title={"Название банка:"}
-                  currency={banks}
-                  name={"bank_name"}
+                    value={requestState.bank_name}
+                    onChange={handlerChange}
+                    title={"Название банка:"}
+                    currency={banks}
+                    name={"bank_name"}
                 />
 
                 <Select
-                  currency={transactionTypes}
-                  name={"transaction_type"}
-                  value={requestState.transaction_type}
-                  onChange={handlerChange}
-                  title={"Тип операции:"}
+                    currency={transactionTypes}
+                    name={"transaction_type"}
+                    value={requestState.transaction_type}
+                    onChange={handlerChange}
+                    title={"Тип операции:"}
                 />
 
                 <Select
-                  value={requestState.currency}
-                  onChange={handlerChange}
-                  title={"Валюта:"}
-                  currency={currency}
-                  name={"currency"}
+                    value={requestState.currency}
+                    onChange={handlerChange}
+                    title={"Валюта:"}
+                    currency={currency}
+                    name={"currency"}
                 />
 
                 <Select
-                  value={requestState.product_or_service}
-                  onChange={handlerChange}
-                  title={"Товар или услуга:"}
-                  currency={[{title: "Product", meaning: "Product"}, {title: "Service", meaning: "Service"}]}
-                  name={"product_or_service"}
+                    value={requestState.product_or_service}
+                    onChange={handlerChange}
+                    title={"Товар или услуга:"}
+                    currency={[{title: "Product", meaning: "Product"}, {title: "Service", meaning: "Service"}]}
+                    name={"product_or_service"}
                 />
 
                 <Select
-                  currency={[{title: "Sell", meaning: "Sell"}, {title: "Buy", meaning: "Buy"}]}
-                  title={"Продать или купить:"}
-                  onChange={handlerChange}
-                  value={requestState.sell_or_buy}
-                  name={"sell_or_buy"}
+                    currency={[{title: "Sell", meaning: "Sell"}, {title: "Buy", meaning: "Buy"}]}
+                    title={"Продать или купить:"}
+                    onChange={handlerChange}
+                    value={requestState.sell_or_buy}
+                    name={"sell_or_buy"}
                 />
 
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Дата:</p>
                     <div className="col-8">
-                        <input type="date" className="form-control" value={requestState.date} name="date" onChange={handlerChange} />
+                        <input type="date" className="form-control" value={requestState.date} name="date"
+                               onChange={handlerChange}/>
                     </div>
                 </div>
 
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Номер сделки:</p>
                     <div className="col-8">
-                        <input type="number" className="form-control" value={requestState.deal_number} name="deal_number" onChange={handlerChange} />
+                        <input type="number" className="form-control" value={requestState.deal_number}
+                               name="deal_number"
+                               onChange={handlerChange}/>
                     </div>
                 </div>
 
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Режим:</p>
                     <div className="col-8">
-                        <select className="form-select" aria-label="Default select example" name="mode" value={requestState.mode} onChange={handlerChange} required>
+                        <select className="form-select" aria-label="Default select example" name="mode"
+                                value={requestState.mode}
+                                onChange={handlerChange} required>
                             <option defaultValue>...</option>
                             <option value="Bank client">Bank client</option>
                             <option value="Operator">Operator</option>
@@ -312,14 +330,16 @@ const Request = () => {
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Клиентский курс:</p>
                     <div className="col-8">
-                        <input type="number" step="0.01" className="form-control" name="client_course" value={requestState.client_course} onChange={handlerChange} />
+                        <input type="number" step="0.01" className="form-control" name="client_course"
+                               value={requestState.client_course} onChange={handlerChange}/>
                     </div>
                 </div>
 
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Исходящая валюта:</p>
                     <div className="col-8">
-                        <select className="form-select" aria-label="Default select example" name="outgoing_currency" value={requestState.outgoing_currency} onChange={handlerChange} required>
+                        <select className="form-select" aria-label="Default select example" name="outgoing_currency"
+                                value={requestState.outgoing_currency} onChange={handlerChange} required>
                             <option defaultValue>...</option>
                             {
                                 currency.map((item, idx) => {
@@ -333,35 +353,41 @@ const Request = () => {
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Внутренний курс:</p>
                     <div className="col-8">
-                        <input type="number" step="0.01" className="form-control" name="internal_course" value={requestState.internal_course} onChange={handlerChange} />
+                        <input type="number" step="0.01" className="form-control" name="internal_course"
+                               value={requestState.internal_course} onChange={handlerChange}/>
                     </div>
                 </div>
 
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Исходящая сумма:</p>
                     <div className="col-8">
-                        <input type="number" className="form-control" name="outgoing_amount" value={requestState.outgoing_amount} onChange={handlerChange} />
+                        <input type="number" className="form-control" name="outgoing_amount"
+                               value={requestState.outgoing_amount}
+                               onChange={handlerChange}/>
                     </div>
                 </div>
 
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Входящая сумму:</p>
                     <div className="col-8">
-                        <input type="number" className="form-control" min="0" name="price" value={requestState.price} onChange={handlerChange} required/>
+                        <input type="number" className="form-control" min="0" name="price" value={requestState.price}
+                               onChange={handlerChange} required/>
                     </div>
                 </div>
 
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Наша компания:</p>
                     <div className="col-8">
-                        <CustomSelect selectCompanyClick={toCompanyFunc} />
+                        <CustomSelect selectCompanyClick={toCompanyFunc}/>
                     </div>
                 </div>
 
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Банк нашей компании:</p>
                     <div className="col-8">
-                        <select className="form-select" aria-label="Default select example" name="bank" value={requestState.bank} onChange={handlerChange} required>
+                        <select className="form-select" aria-label="Default select example" name="bank"
+                                value={requestState.bank}
+                                onChange={handlerChange} required>
                             <option defaultValue>...</option>
                             {
                                 companies?.find(el => el.id === Number(requestState.to_company))?.banks?.map((item, idx) => (
@@ -375,38 +401,72 @@ const Request = () => {
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Пользователь:</p>
                     <div className="col-8">
-                        <select className="form-select" aria-label="Default select example" name="user" value={requestState.user} onChange={handlerChange} required>
-                            <option defaultValue>...</option>
-                            {
-                                user?.map((item, idx) => (
-                                  <option key={idx} value={item.id}>{item.username}</option>
-                                ))
-                            }
-                        </select>
+                        <div className="custom-select h-100">
+                            <div className="d-flex form-control h-100" onClick={() => setUserSearch(!userSearch)}>{requestState.user ? requestState.user.username : "..."}</div>
+                            <div className="my-list" style={userSearch ? {display: "block"} : {}}>
+                                <span className="d-block p-2">
+                                    <input className="form-control" value={userSearchValue} placeholder="Поиск"
+                                           onChange={(e) => setUserSearchValue(e.target.value)}/>
+                                </span>
+                                {
+                                    newUserArray?.map((item, idx) => (
+                                        <div key={idx} onClick={() => {
+                                            handlerChange({target: {name: "user", value: item}})
+                                            setUserSearch(!userSearch)
+                                            setUserSearchValue("")
+                                        }}>
+                                            {item.username}
+                                        </div>
+                                    ))
+                                }
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Компания контрагента:</p>
                     <div className="col-8">
-                        <select className="form-select" aria-label="Default select example" name="from_company" value={requestState.from_company} onChange={handlerChange} required>
-                            <option defaultValue>...</option>
-                            {
-                                user?.find(el => el.id === Number(requestState.user))?.companies?.map((item, idx) => (
-                                  <option key={idx} value={item.id}>{item.company_full_name_ru}</option>
-                                ))
-                            }
-                        </select>
+                        <div className="custom-select h-100">
+                            <div className="d-flex form-control h-100" onClick={() => setFromCompanySearch(!fromCompanySearch)}>{requestState.from_company ? requestState.from_company.company_full_name_ru : "..."}</div>
+                            <div className="my-list" style={fromCompanySearch ? {display: "block"} : {}}>
+                                <span className="d-block p-2">
+                                    <input className="form-control" value={fromCompanySearchValue} placeholder="Поиск"
+                                           onChange={(e) => setFromCompanySearchValue(e.target.value)}/>
+                                </span>
+                                {
+                                    newFromCompanyArray?.map((item, idx) => (
+                                        <div key={idx} onClick={() => {
+                                            handlerChange({target: {name: "from_company", value: item}})
+                                            setFromCompanySearch(!fromCompanySearch)
+                                            setFromCompanySearchValue("")
+                                        }}>
+                                            {item.company_full_name_ru}
+                                        </div>
+                                    ))
+                                }
+                            </div>
+                        </div>
+                        {/*<select className="form-select" aria-label="Default select example" name="from_company"*/}
+                        {/*        value={requestState.from_company} onChange={handlerChange} required>*/}
+                        {/*    <option defaultValue>...</option>*/}
+                        {/*    {*/}
+                        {/*        user?.find(el => el.id === Number(requestState?.user?.id))?.companies?.map((item, idx) => (*/}
+                        {/*            <option key={idx} value={item.id}>{item.company_full_name_ru}</option>*/}
+                        {/*        ))*/}
+                        {/*    }*/}
+                        {/*</select>*/}
                     </div>
                 </div>
 
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Банк контрагента:</p>
                     <div className="col-8">
-                        <select className="form-select" aria-label="Default select example" name="counterparty_bank" value={requestState.counterparty_bank} onChange={handlerChange} required>
+                        <select className="form-select" aria-label="Default select example" name="counterparty_bank"
+                                value={requestState.counterparty_bank} onChange={handlerChange} required>
                             <option defaultValue>...</option>
                             {
-                                user?.find(el => el.id === Number(requestState.user))?.companies?.find(el => el.id === Number(requestState.from_company))?.banks?.map((item, idx) => (
+                                user?.find(el => el.id === Number(requestState?.user?.id))?.companies?.find(el => el.id === Number(requestState.from_company.id))?.banks?.map((item, idx) => (
                                     <option key={idx} value={item.id}>{item.company_bank_name_en}</option>
                                 ))
                             }
@@ -417,7 +477,8 @@ const Request = () => {
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Категория продукта:</p>
                     <div className="col-8">
-                        <select className="form-select" aria-label="Default select example" name="product_category" value={requestState.product_category} onChange={handlerChange} required>
+                        <select className="form-select" aria-label="Default select example" name="product_category"
+                                value={requestState.product_category} onChange={handlerChange} required>
                             <option defaultValue>...</option>
                             {
                                 products?.map((item, idx) => (
@@ -433,7 +494,8 @@ const Request = () => {
                 <div className="row mt-3 align-items-center">
                     <p className="mb-0 col-4">Товар:</p>
                     <div className="col-8">
-                        <select className="form-select" aria-label="Default select example" name="product" value={requestState.product} onChange={handlerChange} required>
+                        <select className="form-select" aria-label="Default select example" name="product"
+                                value={requestState.product} onChange={handlerChange} required>
                             <option defaultValue>...</option>
                             {
                                 products2?.map((item, idx) => (
