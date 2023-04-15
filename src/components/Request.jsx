@@ -165,7 +165,7 @@ const Request = () => {
             outgoing_amount: requestState.outgoing_amount,
             to_company: requestState.to_company,
             bank: requestState.bank,
-            from_company: requestState.from_company,
+            from_company: requestState.from_company.id,
             counterparty_bank: requestState.counterparty_bank,
             product_category: requestState.product_category,
             product: requestState.product,
@@ -447,15 +447,6 @@ const Request = () => {
                                 }
                             </div>
                         </div>
-                        {/*<select className="form-select" aria-label="Default select example" name="from_company"*/}
-                        {/*        value={requestState.from_company} onChange={handlerChange} required>*/}
-                        {/*    <option defaultValue>...</option>*/}
-                        {/*    {*/}
-                        {/*        user?.find(el => el.id === Number(requestState?.user?.id))?.companies?.map((item, idx) => (*/}
-                        {/*            <option key={idx} value={item.id}>{item.company_full_name_ru}</option>*/}
-                        {/*        ))*/}
-                        {/*    }*/}
-                        {/*</select>*/}
                     </div>
                 </div>
 
