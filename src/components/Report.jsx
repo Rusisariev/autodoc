@@ -44,13 +44,13 @@ const Report = () => {
       <div className="row mt-3 align-items-center">
         <p className="mb-0 col-4">Дата от:</p>
         <div className="col-8">
-          <input type="date" className="form-control" value={state.date_from} name="date_to" onChange={handlerChange} />
+          <input type="date" className="form-control" value={state.date_from} name="date_from" onChange={handlerChange} />
         </div>
       </div>
       <div className="row mt-3 align-items-center">
         <p className="mb-0 col-4">Дата до:</p>
         <div className="col-8">
-          <input type="date" className="form-control" value={state.date_to} name="date_from" onChange={handlerChange} />
+          <input type="date" className="form-control" value={state.date_to} name="date_to" onChange={handlerChange} />
         </div>
       </div>
       <div className="row mt-3 align-items-center">
