@@ -96,11 +96,11 @@ const Request = () => {
     const userDetail = useSelector(state => state.user)
 
     const newUserArray = useMemo(() => {
-        return user.filter(el => el.username.toLowerCase().includes(userSearchValue.toLowerCase()))
+        return userSearchValue ? user.filter(el => el.first_name.toLowerCase().includes(userSearchValue.toLowerCase())) : user
     }, [userSearchValue])
 
     const newFromCompanyArray = useMemo(() => {
-        return user?.find(el => el.id === Number(requestState?.user?.id))?.companies.filter(el => el.company_full_name_ru.toLowerCase().includes(fromCompanySearchValue.toLowerCase()))
+        return fromCompanySearchValue ? user?.find(el => el.id === Number(requestState?.user?.id))?.companies.filter(el => el.company_full_name_ru.toLowerCase().includes(fromCompanySearchValue.toLowerCase())) : user?.find(el => el.id === Number(requestState?.user?.id))?.companies
     }, [fromCompanySearchValue])
 
     const handlerChange = (e) => {
@@ -402,7 +402,7 @@ const Request = () => {
                     <p className="mb-0 col-4">Пользователь:</p>
                     <div className="col-8">
                         <div className="custom-select h-100">
-                            <div className="d-flex form-control h-100" onClick={() => setUserSearch(!userSearch)}>{requestState.user ? requestState.user.username : "..."}</div>
+                            <div className="d-flex form-control h-100" onClick={() => setUserSearch(!userSearch)}>{requestState.user ? requestState.user.first_name : "..."}</div>
                             <div className="my-list" style={userSearch ? {display: "block"} : {}}>
                                 <span className="d-block p-2">
                                     <input className="form-control" value={userSearchValue} placeholder="Поиск"
@@ -415,7 +415,7 @@ const Request = () => {
                                             setUserSearch(!userSearch)
                                             setUserSearchValue("")
                                         }}>
-                                            {item.username}
+                                            {item.first_name}
                                         </div>
                                     ))
                                 }
