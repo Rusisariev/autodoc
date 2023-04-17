@@ -96,11 +96,15 @@ const Request = () => {
     const userDetail = useSelector(state => state.user)
 
     const newUserArray = useMemo(() => {
-        return userSearchValue ? user.filter(el => el.first_name.toLowerCase().includes(userSearchValue.toLowerCase())) : user
+        return user.filter(el => el.first_name.toLowerCase().includes(userSearchValue.toLowerCase())) 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userSearchValue])
 
+    console.log(newUserArray)
+
     const newFromCompanyArray = useMemo(() => {
-        return fromCompanySearchValue ? user?.find(el => el.id === Number(requestState?.user?.id))?.companies.filter(el => el.company_full_name_ru.toLowerCase().includes(fromCompanySearchValue.toLowerCase())) : user?.find(el => el.id === Number(requestState?.user?.id))?.companies
+        return user?.find(el => el.id === Number(requestState?.user?.id))?.companies.filter(el => el.company_full_name_ru.toLowerCase().includes(fromCompanySearchValue.toLowerCase()))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fromCompanySearchValue])
 
     const handlerChange = (e) => {
@@ -409,7 +413,7 @@ const Request = () => {
                                            onChange={(e) => setUserSearchValue(e.target.value)}/>
                                 </span>
                                 {
-                                    newUserArray?.map((item, idx) => (
+                                    (newUserArray?.length ? newUserArray : user)?.map((item, idx) => (
                                         <div key={idx} onClick={() => {
                                             handlerChange({target: {name: "user", value: item}})
                                             setUserSearch(!userSearch)
@@ -435,7 +439,7 @@ const Request = () => {
                                            onChange={(e) => setFromCompanySearchValue(e.target.value)}/>
                                 </span>
                                 {
-                                    newFromCompanyArray?.map((item, idx) => (
+                                    (newFromCompanyArray?.length ? newFromCompanyArray : user?.find(el => el.id === Number(requestState?.user?.id))?.companies)?.map((item, idx) => (
                                         <div key={idx} onClick={() => {
                                             handlerChange({target: {name: "from_company", value: item}})
                                             setFromCompanySearch(!fromCompanySearch)
