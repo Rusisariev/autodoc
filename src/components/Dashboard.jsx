@@ -9,6 +9,7 @@ const Dashboard = () => {
     const [superUser, setSuperUser] = useState(false);
     const [modal, setModal] = useState(false);
     const [details, setDetails] = useState(0);
+    const [successFile, setSuccessFile] = useState(false)
     const [curs, setCurs] = useState({
         internal_course: "",
         client_course: ""
@@ -99,6 +100,7 @@ const Dashboard = () => {
     async function sendFile(id) {
         await axiosSSR.patch(`/api/request/${id}/`, {status_gen: true}).then(res => {
             getDetail(id)
+            setSuccessFile(true)
             return res
         })
     }
@@ -309,7 +311,10 @@ const Dashboard = () => {
             <div
                 className="dashboard-modal"
                 style={!modal ? { display: "none" } : { display: "flex" }}
-                onClick={() => setModal(false)}
+                onClick={() => {
+                    setModal(false)
+                    setSuccessFile(false)
+                }}
             >
                 <div
                     className="dashboard-modal-content"
@@ -329,7 +334,7 @@ const Dashboard = () => {
                         </a>
                     </p>
                     <div className="mb-2">
-                        <button className="btn btn-primary" onClick={() => sendFile(details?.id)}>Сгенерировать файлы</button>
+                        <button className={!successFile ? "btn btn-primary" : "btn btn-secondary"} onClick={() => sendFile(details?.id)}>{!successFile ? "Сгенерировать файлы" : "Файл сгенерирован"}</button>
                     </div>
                     <div className="send-curs mb-3">
                         <div className="row mt-3 align-items-center">

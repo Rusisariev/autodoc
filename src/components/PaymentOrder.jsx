@@ -54,7 +54,7 @@ const PaymentOrder = () => {
           <input type="date" className="form-control" value={date} name="" onChange={handlerChangeDate} />
         </div>
         <div className="col">
-          <button className="btn-danger btn w-100" onClick={resetClick}>Сбосить</button>
+          <button className="btn-danger btn w-100" onClick={resetClick}>Сбросить</button>
         </div>
         <div className="col">
           <button className="btn-primary btn w-100" onClick={applyClick}>Применить</button>
