@@ -52,7 +52,7 @@ const Report = () => {
     }
 
     const newUserArray = useMemo(() => {
-        return user.filter(el => el.role !== "Client").filter(el => el.first_name.toLowerCase().includes(userSearchValue.toLowerCase()))
+        return user?.filter(el => el.role === "Client")?.filter(el => el.first_name.toLowerCase().includes(userSearchValue.toLowerCase()))
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userSearchValue])
 
