@@ -98,9 +98,9 @@ const Dashboard = () => {
     }
 
     async function sendFile(id) {
+        setSuccessFile(true)
         await axiosSSR.patch(`/api/request/${id}/`, {status_gen: true}).then(res => {
             getDetail(id)
-            setSuccessFile(true)
             return res
         })
     }
