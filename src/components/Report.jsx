@@ -84,7 +84,7 @@ const Report = () => {
                                            onChange={(e) => setUserSearchValue(e.target.value)}/>
                                 </span>
                             {
-                                (newUserArray?.length ? newUserArray : user)?.map((item, idx) => (
+                                (newUserArray?.length ? newUserArray : user)?.filter(el => el.role === "Client")?.map((item, idx) => (
                                     <div key={idx} onClick={() => {
                                         handlerChange({target: {name: "user", value: item}})
                                         setUserSearch(!userSearch)

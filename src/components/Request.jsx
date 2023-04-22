@@ -100,8 +100,6 @@ const Request = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userSearchValue])
 
-    console.log(newUserArray)
-
     const newFromCompanyArray = useMemo(() => {
         return user?.find(el => el.id === Number(requestState?.user?.id))?.companies.filter(el => el.company_full_name_ru.toLowerCase().includes(fromCompanySearchValue.toLowerCase()))
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -413,7 +411,7 @@ const Request = () => {
                                            onChange={(e) => setUserSearchValue(e.target.value)}/>
                                 </span>
                                 {
-                                    (newUserArray?.length ? newUserArray : user)?.map((item, idx) => (
+                                    (newUserArray?.length ? newUserArray : user)?.filter(el => el.role === "Client")?.map((item, idx) => (
                                         <div key={idx} onClick={() => {
                                             handlerChange({target: {name: "user", value: item}})
                                             setUserSearch(!userSearch)
