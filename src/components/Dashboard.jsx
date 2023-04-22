@@ -10,12 +10,14 @@ const Dashboard = () => {
     const [modal, setModal] = useState(false);
     const [details, setDetails] = useState(0);
     const [successFile, setSuccessFile] = useState(false)
+    const [loadingFile, setLoadingFile] = useState(false)
     const [curs, setCurs] = useState({
         internal_course: "",
         client_course: ""
     })
     const navigate = useNavigate()
     const userDetail = useSelector(state => state.user)
+
 
     const patchDashboard = async (id, status) => {
         await axiosSSR.patch(`/api/inner_traids_dashboard/${id}/`, {
@@ -98,9 +100,11 @@ const Dashboard = () => {
     }
 
     async function sendFile(id) {
-        setSuccessFile(true)
+        setLoadingFile(true)
         await axiosSSR.patch(`/api/request/${id}/`, {status_gen: true}).then(res => {
             getDetail(id)
+            setLoadingFile(false)
+            setSuccessFile(true)
             return res
         })
     }
@@ -334,7 +338,7 @@ const Dashboard = () => {
                         </a>
                     </p>
                     <div className="mb-2">
-                        <button className={!successFile ? "btn btn-primary" : "btn btn-secondary"} onClick={() => sendFile(details?.id)}>{!successFile ? "Сгенерировать файлы" : "Файл сгенерирован"}</button>
+                        <button className={!successFile ? "btn btn-primary" : "btn btn-secondary"} onClick={() => sendFile(details?.id)}>{!successFile ? loadingFile ? "Файл генерится" : "Сгенерировать файлы" : "Файл сгенерирован"}</button>
                     </div>
                     <div className="send-curs mb-3">
                         <div className="row mt-3 align-items-center">

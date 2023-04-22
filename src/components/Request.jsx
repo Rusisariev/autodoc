@@ -505,9 +505,9 @@ const Request = () => {
 
                 <div className='d-flex justify-content-between mb-5 mt-3 align-items-center'>
                     <div>
-                        {
-                            docx ? <a href={docx.traid} download>Скачать документ</a> : null
-                        }
+                        {/*{*/}
+                        {/*    docx ? <a href={docx.traid} download>Скачать документ</a> : null*/}
+                        {/*}*/}
                     </div>
                     <div>
                         <button className="btn btn-danger me-3" onClick={clearState}>Сбросить</button>
