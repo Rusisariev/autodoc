@@ -35,7 +35,8 @@ const Archive = () => {
                     return (
                         <div key={idx}>
                             <div
-                                className={"card"}
+                                className="card p-3 m-2"
+                                style={{cursor: "pointer"}}
                                 onClick={() => {
                                     // getDetail(item.id);
                                     setModal(item.id);
@@ -49,7 +50,7 @@ const Archive = () => {
                             </div>
                             <div
                                 className="dashboard-modal"
-                                style={!modal ? { display: "none" } : { display: "flex" }}
+                                style={modal !== item.id ? { display: "none" } : { display: "flex" }}
                                 onClick={() => setModal(null)}
                             >
                                 <div

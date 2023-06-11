@@ -25,7 +25,7 @@ const ClosingDocumentsList = () => {
                         <div key={idx}>
                             <div
                                 className="card p-3 my-2 mx-2"
-    style={{cursor: "pointer"}}
+                                style={{cursor: "pointer"}}
                                 onClick={() => {
                                     setModal(item.id);
                                 }}
@@ -49,30 +49,27 @@ const ClosingDocumentsList = () => {
                                         {item.contract_number}
                                     </p>
                                     <p>
-                                        <a href={item?.transport_request_doc} className="mb-2">
-                                            транспортный запрос
-                                        </a>
+                                        <a href={item.transport_request_doc}>скачать транспортную заявку</a>
                                     </p>
                                     <p>
-                                        <a href={item?.ttn_doc} className="mb-2">
-                                            ТТН
-                                        </a>
+                                        <a href={item.ttn_doc}>скачать ТТН</a>
                                     </p>
                                     <p>
-                                        <a href={item?.upd_doc} className="mb-2">
-                                            УПН
-                                        </a>
+                                        <a href={item.upd_doc}>скачать УПД</a>
                                     </p>
                                     <p>
-                                        <a href={item?.dover_doc} className="mb-2">
-                                            Довереность
-                                        </a>
+                                        <a href={item.dover_doc}>скачать доверенность на водителя</a>
                                     </p>
                                     <p>
-                                        <a href={item?.packing_list_doc} className="mb-2">
-                                            товарная накладная
-                                        </a>
+                                        <a href={item.packing_list_doc}>скачать упаковочный лист</a>
                                     </p>
+                                    {
+                                        item.transport_request_cmr.map((el, idx) => (
+                                            <p>
+                                                <a href={el.cmr_doc}>скачать ЦМР {idx+1}</a>
+                                            </p>
+                                        ))
+                                    }
                                     <p>
                                         Дата подачи документов: {item.application_date}
                                     </p>
