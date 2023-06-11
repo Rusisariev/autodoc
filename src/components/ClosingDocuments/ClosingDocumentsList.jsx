@@ -45,32 +45,38 @@ const ClosingDocumentsList = () => {
                                     onClick={(e) => e.stopPropagation()}
                                 >
                                     <p>
+                                        {item.contract_number}
+                                    </p>
+                                    <p>
                                         <a href={item?.transport_request_doc} className="mb-2">
-                                            transport_request_doc
+                                            транспортный запрос
                                         </a>
                                     </p>
                                     <p>
                                         <a href={item?.ttn_doc} className="mb-2">
-                                            ttn_doc
+                                            ТТН
                                         </a>
                                     </p>
                                     <p>
                                         <a href={item?.upd_doc} className="mb-2">
-                                            ttn_doc
+                                            УПН
                                         </a>
                                     </p>
                                     <p>
                                         <a href={item?.dover_doc} className="mb-2">
-                                            dover_doc
+                                            Довереность
                                         </a>
                                     </p>
                                     <p>
                                         <a href={item?.packing_list_doc} className="mb-2">
-                                            packing_list_doc
+                                            товарная накладная
                                         </a>
                                     </p>
                                     <p>
-                                        Дата:
+                                        Дата подачи документов: {item.application_date}
+                                    </p>
+                                    <p>
+                                        Дата контракта: {item.contract_date}
                                     </p>
                                 </div>
                             </div>

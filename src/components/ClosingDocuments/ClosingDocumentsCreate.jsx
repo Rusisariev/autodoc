@@ -3,6 +3,7 @@ import Select from "../UI/Select";
 import {currency} from "../Request";
 import MultiSelect from "../UI/MultiSelect";
 import axiosSSR from "../../axios";
+import Loading from "../Loading";
 
 const ClosingDocumentsCreate = () => {
     const [closingDocument, setClosingDocument] = useState({
@@ -34,6 +35,8 @@ const ClosingDocumentsCreate = () => {
     const [error, setError] = useState(false)
     const [al, setAl] = useState(false)
     const [driver, setDriver] = useState([])
+    const [success, setSuccess] = useState(null)
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         fetchPaymentOrder().then(r => r)
@@ -132,10 +135,14 @@ const ClosingDocumentsCreate = () => {
             payer: closingDocument.payer.id,
             seller: closingDocument.seller.id
         }
-
+        setLoading(true)
         await axiosSSR.post("/api/transport_request/", data).then(res => {
             setAl(true)
             clearState()
+
+            setSuccess(res.data)
+
+            setLoading(false)
 
             setTimeout(() => {
                 setAl(false)
@@ -147,6 +154,12 @@ const ClosingDocumentsCreate = () => {
 
     return (
         <div>
+
+            {
+                loading ? (
+                    <Loading />
+                ) : null
+            }
 
             <form onSubmit={handlerClick} >
                 <MultiSelect
@@ -347,7 +360,7 @@ const ClosingDocumentsCreate = () => {
                     </div>
                 </div>
 
-                <div className='d-flex justify-content-between mb-5 mt-3 align-items-center'>
+                <div className='d-flex justify-content-between mb-3 mt-3 align-items-center'>
                     <div>
                         {/*{*/}
                         {/*    docx ? <a href={docx.traid} download>Скачать документ</a> : null*/}
@@ -379,6 +392,35 @@ const ClosingDocumentsCreate = () => {
                     <button type="button" className="btn-close ms-5" onClick={() => setError(false)}/>
                 </div>
             </div>
+
+            {
+                success ? (
+                    <div className="mt-3 mb-5">
+                        <div>
+                            <a href={success.transport_request_doc}>скачать транспортную заявку</a>
+                        </div>
+                        <div>
+                            <a href={success.ttn_doc}>скачать ТТН</a>
+                        </div>
+                        <div>
+                            <a href={success.upd_doc}>скачать УПД</a>
+                        </div>
+                        <div>
+                            <a href={success.dover_doc}>скачать доверенность на водителя</a>
+                        </div>
+                        <div>
+                            <a href={success.packing_list_doc}>скачать упаковочный лист</a>
+                        </div>
+                        {
+                            success.transport_request_cmr.map((el, idx) => (
+                                <div>
+                                    <a href={el.cmr_doc}>скачать ЦМР {idx+1}</a>
+                                </div>
+                            ))
+                        }
+                    </div>
+                ) : null
+            }
 
         </div>
     );
