@@ -25,6 +25,7 @@ const ClosingDocumentsList = () => {
                         <div key={idx}>
                             <div
                                 className="card p-3 my-2 mx-2"
+    style={{cursor: "pointer"}}
                                 onClick={() => {
                                     setModal(item.id);
                                 }}
