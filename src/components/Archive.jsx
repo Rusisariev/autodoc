@@ -29,7 +29,7 @@ const Archive = () => {
     }, [])
 
     return (
-        <div className="dashboard">
+        <div className="dashboard mt-3">
             {
                 archive?.map((item, idx) => {
                     return (

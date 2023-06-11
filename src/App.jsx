@@ -13,6 +13,8 @@ import Archive from "./components/Archive";
 import Order from "./components/Order";
 import PaymentOrder from "./components/PaymentOrder";
 import Report from "./components/Report";
+import ClosingDocumentsCreate from "./components/ClosingDocuments/ClosingDocumentsCreate";
+import ClosingDocumentsList from "./components/ClosingDocuments/ClosingDocumentsList";
 
 const routes = [
     {path: "/", element: <Login/>},
@@ -26,6 +28,8 @@ const routes = [
     {path: "/order", element: <Order/>},
     {path: "/payment-order", element: <PaymentOrder/>},
     {path: "/report", element: <Report/>},
+    {path: "/closing-documents", element: <ClosingDocumentsCreate />},
+    {path: "/closing-documents-list", element: <ClosingDocumentsList />},
     {path: "*", element: <NotFound/>},
 ]
 

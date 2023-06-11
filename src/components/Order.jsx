@@ -31,7 +31,7 @@ const Order = () => {
     }, [])
 
     return (
-        <div className="dashboard">
+        <div className="dashboard mt-3">
             {
                 order?.map((item, idx) => {
                     return (
