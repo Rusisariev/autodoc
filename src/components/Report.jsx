@@ -79,10 +79,15 @@ const Report = () => {
                         <div className="d-flex form-control h-100"
                              onClick={() => setUserSearch(!userSearch)}>{state.user ? state.user.first_name : "..."}</div>
                         <div className="my-list" style={userSearch ? {display: "block"} : {}}>
-                                <span className="d-block p-2">
-                                    <input className="form-control" value={userSearchValue} placeholder="Поиск"
-                                           onChange={(e) => setUserSearchValue(e.target.value)}/>
-                                </span>
+                            <span className="d-block p-2">
+                                <input className="form-control" value={userSearchValue} placeholder="Поиск"
+                                       onChange={(e) => setUserSearchValue(e.target.value)}/>
+                            </span>
+                            <div onClick={() => {
+                                handlerChange({target: {name: "user", value: ""}})
+                                setUserSearch(!userSearch)
+                                setUserSearchValue("")
+                            }}>...</div>
                             {
                                 (newUserArray?.length ? newUserArray : user)?.filter(el => el.role === "Client")?.map((item, idx) => (
                                     <div key={idx} onClick={() => {

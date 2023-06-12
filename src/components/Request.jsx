@@ -401,7 +401,7 @@ const Request = () => {
                 </div>
 
                 <div className="row mt-3 align-items-center">
-                    <p className="mb-0 col-4">Пользователь:</p>
+                    <p className="mb-0 col-4">Клиент:</p>
                     <div className="col-8">
                         <div className="custom-select h-100">
                             <div className="d-flex form-control h-100" onClick={() => setUserSearch(!userSearch)}>{requestState.user ? requestState.user.first_name : "..."}</div>
